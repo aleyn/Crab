@@ -1,0 +1,69 @@
+/*========================================
+    Create Date: 2016-11-30 20:19
+========================================*/
+import System;
+
+interface System::Knob
+{
+  default extern {get;set;}
+  property A {get;set;index :1;}
+  property B {get;set;index :2;}
+  property C {get;set;index :3;}
+}
+
+
+extern ShowMessage(Msg);
+extern ShowNet() : 'NetInfo';
+
+function ShowDemo(P1, P2, P3)
+{
+   var L1;
+   L1 = P2;
+}
+
+function GetName()
+{
+  return "MyName";
+}
+
+
+const KEY_PRESS = 0x01000000;
+
+event OnKeyPress : KEY_PRESS + 1
+{
+  ShowMessage("Keypress:1");
+}
+
+event KEY_PRESS + 1
+{
+  ShowMessage("Keypress:1");
+}
+
+
+main
+{
+   var L1;
+   var Value, OldValue;
+   
+   
+   L1 = System.Clock.Date;
+   
+   ShowDemo(L1);
+   
+   OldValue = 0;
+   
+   repeat
+   {
+     Value = System.Knob.A;
+     
+     if (Value != OldValue)
+     {
+      ShowMessage("Knob:" # Value);
+      
+      
+      System.Knob.B = Value;
+      OldValue = Value;
+     }
+   } until error;
+   
+}

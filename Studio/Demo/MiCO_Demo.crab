@@ -1,0 +1,82 @@
+/*========================================
+    CrabIO wifi Ê¾Àý
+    Module: MiCO 3166
+========================================*/
+import MiCO;
+
+extern NetScan();
+extern NetConnect(SSID, Pass);
+extern NetGetDns(Domain);
+extern NetLocalIP();
+extern NetServerDate(Domain, DateOffset);
+extern NetServerTime(Domain, TimeOffset);
+
+const KEY_PRESS = 0x01000000;
+
+event OnKey1 : KEY_PRESS + 0x21
+{
+  var IP;
+  board.LED1 = LED_RED;
+  IP = NetLocalIP();
+  Print("Local IP is :" # IP # '\n');
+  board.LED1 = LED_OFF;
+}
+
+event OnKey2 : KEY_PRESS + 0x20
+{
+  board.LED1 = LED_RED;
+  NetConnect("WU-FAMILY","adg82826812");
+  board.LED1 = LED_OFF;
+}
+
+event OnKey3 : KEY_PRESS + 0x11
+{
+  var IP;
+  var Domain = "www.baidu.com";
+  board.LED1 = LED_RED;
+  IP = NetGetDns(Domain);
+  
+  if (IP != null)
+  {
+    Print(Domain # ' = ' #IP # '\n');
+  }
+  
+  board.LED1 = LED_OFF;
+}
+
+event OnKey4 : KEY_PRESS + 0x10
+{
+  board.LED1 = LED_RED;
+  var Date, Time;
+  var Domain = "s2m.time.edu.cn";
+
+  Print("Connect to " # Domain #", Please Wait.\n");
+
+  Date = NetServerDate(Domain);
+  Time = NetServerTime(Domain, 8);
+
+  print("Server Datetime: " # Date # " " # Time # "\n");
+  board.LED1 = LED_OFF;
+}
+
+main
+{
+  Print('=== Crab for MiCO Demo ===\n');
+
+
+  var Key = 0;
+  Var OldKey = 0;
+
+  board.LED1 = LED_OFF;
+  board.LED2 = LED_OFF;
+
+  OpenEvent();
+
+   repeat
+   {
+   }
+   until error;
+
+  //CloseEvent();
+}
+

@@ -1,0 +1,33 @@
+{# System = true #}
+{# Float = (8, 3) #}
+{# MSec = false #}
+
+const VERSION = COMPILER_VERSION;
+const DISABLE = 0;
+const ENABLE  = 1;
+const PI = 3.14159;
+
+interface System::Clock
+{
+  default extern
+  {
+    type: 'CLOCK';
+  }
+  
+  property Year   { get; set; index: 1 }
+  property Month  { get; set; index: 2 }
+  property Day    { get; set; index: 3 }
+  property Week   { get; set; index: 4 }
+  property Hour   { get; set; index: 5 }
+  property Min    { get; set; index: 6 }
+  property Sec    { get; set; index: 7 }
+  property MSec   { get; set; index: 8 }
+  property Date   { get; set; index: 9 }
+  property Time   { get; set; index: 10}
+};
+
+extern SysInfo()             : 0x0001;
+extern Input(Type)           : 0x0002;
+extern Print(Msg)            : 0x0003;
+extern Delay(MS)             : 0x0004;
+extern Format(Text, Param)   : 0x0005;

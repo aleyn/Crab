@@ -1,0 +1,10 @@
+Mark:[%RootKey%]
+[%
+  Output:""
+  CodeOutput:""
+  BuildDir:""
+  Log:TRUE
+  Map:FALSE
+  UTF8Mode:FALSE
+  Debug:TRUE
+%]

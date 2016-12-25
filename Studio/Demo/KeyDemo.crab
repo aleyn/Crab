@@ -1,0 +1,98 @@
+/*=======================================================
+    Crab Board Demo
+    按键事件演示程序
+=======================================================*/
+import CrabBoard;
+
+var Led1Flag;
+var Led2Flag;
+
+const KEY_PRESS = 0x01000000;
+
+event OnKey1 : KEY_PRESS + 0x10
+{
+  if (Led1Flag != LED_OFF)
+  {
+   Led1Flag = LED_OFF;
+   Print('now LED1 is OFF.\n');
+  }
+  else
+  {
+   Led1Flag = LED_BLUE;
+   Print('now LED1 is BLUE.\n');
+  }
+
+  Board.Led1 = Led1Flag;
+}
+
+event OnKey2 : KEY_PRESS + 0x20
+{
+  if (Led1Flag != LED_OFF)
+  {
+   Led1Flag = LED_OFF;
+   Print('now LED1 is OFF.\n');
+  }
+  else
+  {
+   Led1Flag = LED_RED;
+   Print('now LED1 is RED.\n');
+  }
+
+  Board.Led1 = Led1Flag;
+}
+
+event OnKey3 : KEY_PRESS + 0x11
+{
+  if (Led2Flag != LED_OFF)
+  {
+   Led2Flag = LED_OFF;
+   Print('now LED2 is OFF.\n');
+  }
+  else
+  {
+   Led2Flag = LED_BLUE;
+   Print('now LED2 is BLUE.\n');
+  }
+
+  Board.Led2 = Led2Flag;
+}
+
+event OnKey4 : KEY_PRESS + 0x21
+{
+  if (Led2Flag != LED_OFF)
+  {
+   Led2Flag = LED_OFF;
+   Print('now LED2 is OFF.\n');
+  }
+  else
+  {
+   Led2Flag = LED_RED;
+   Print('now LED2 is RED.\n');
+  }
+
+  Board.Led2 = Led2Flag;
+}
+
+
+main
+{
+  Print('=== Crab Board Demo ===\n');
+  
+  var Key = 0;
+  var OldKey = 0;
+
+  board.LED1 = LED_OFF;
+  board.LED2 = LED_OFF;
+
+  Led1Flag = 0;
+  Led2Flag = 0;
+  
+  OpenEvent();
+  
+  repeat
+  {
+  }
+  until error;
+   
+  CloseEvent();
+}

@@ -1,0 +1,18 @@
+Mark:[%RootKey%]
+[%
+  Output:"$#[PRJ_DIR]\KeyDemo.bin"
+  CodeOutput:"KeyDemo.c"
+  BuildDir:"$#[PRJ_DIR]\Build\"
+  Log:TRUE
+  Map:FALSE
+  UTF8Mode:TRUE
+  Debug:TRUE
+%]
+
+ImportList:[%RootKey%]
+[%
+  ImportDir:"Imports"
+%]
+[%
+  ImportDir:"MyImport"
+%]

@@ -1,0 +1,103 @@
+/*=======================================================
+    Crab Board Demo
+=======================================================*/
+import CrabBoard;
+main
+{
+  Print('=== Crab for MiCO Demo ===\n');
+
+  var Key = 0;
+  Var OldKey = 0;
+  var Led1Flag = 0;
+  var Led2Flag = 0;
+
+  board.LED1 = LED_OFF;
+  board.LED2 = LED_OFF;
+  
+
+   repeat
+   {
+     Key = Board.Key;
+     
+     if (Key)
+     {
+       if (OldKey <> Key)
+       {
+         //Msg = 'Key Press: ' # Key # \13;
+
+         if (Key == 0x10)
+         {
+           if (Led1Flag != LED_OFF)
+           {
+             Led1Flag = LED_OFF;
+             Print('now LED1 is OFF.\n');
+           }
+           else
+           {
+             Led1Flag = LED_BLUE;
+             Print('now LED1 is BLUE.\n');
+           }
+           
+           Board.Led1 = Led1Flag;
+         }
+         
+         if (Key == 0x11)
+         {
+           if (Led1Flag != LED_OFF)
+           {
+             Led1Flag = LED_OFF;
+             Print('now LED1 is OFF.\n');
+           }
+           else
+           {
+             Led1Flag = LED_RED;
+             Print('now LED1 is RED.\n');
+           }
+
+           Board.Led1 = Led1Flag;
+         }
+         
+         if (Key == 0x20)
+         {
+           if (Led2Flag != LED_OFF)
+           {
+             Led2Flag = LED_OFF;
+             Print('now LED2 is OFF.\n');
+           }
+           else
+           {
+             Led2Flag = LED_BLUE;
+             Print('now LED2 is BLUE.\n');
+           }
+
+           Board.Led2 = Led2Flag;
+         }
+         
+         if (Key == 0x21)
+         {
+           if (Led2Flag != LED_OFF)
+           {
+             Led2Flag = LED_OFF;
+             Print('now LED2 is OFF.\n');
+           }
+           else
+           {
+             Led2Flag = LED_RED;
+             Print('now LED2 is RED.\n');
+           }
+
+           Board.Led2 = Led2Flag;
+         }
+         OldKey = Key;
+       }
+       
+
+     }
+     else
+     {
+       OldKey = Key;
+     }
+   }
+   until error;
+}
+
