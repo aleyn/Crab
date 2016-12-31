@@ -1,3 +1,12 @@
+/*========================================
+  System.crab
+                        write by aleyn.wu
+
+  please don't modify this file.
+
+  Create Date: 2015-06-15
+  Last Update: 2016-12-28
+========================================*/
 {# System = true #}
 {# Float = (8, 3) #}
 {# MSec = false #}
@@ -7,6 +16,8 @@ const DISABLE = 0;
 const ENABLE  = 1;
 const PI = 3.14159;
 
+
+//System Clock, link to system layer API
 interface System::Clock
 {
   default extern
@@ -26,8 +37,17 @@ interface System::Clock
   property Time   { get; set; index: 10}
 };
 
-extern SysInfo()             : 0x0001;
-extern Input(Type)           : 0x0002;
-extern Print(Msg)            : 0x0003;
-extern Delay(MS)             : 0x0004;
-extern Format(Text, Param)   : 0x0005;
+//Show system infomation
+extern SysInfo()                          : 0x0001;
+
+//Get input from standard device
+extern Input(Type)                        : 0x0002;
+
+//Pint text to standard device
+extern Print(string Text[255])            : 0x0003;
+
+//Delay with microseconds
+extern Delay(MSec)                        : 0x0004;
+
+//Format paramlist with text
+extern Format(string Text[255], Param)    : 0x0005;

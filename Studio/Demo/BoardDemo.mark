@@ -3,8 +3,8 @@ Mark:[%RootKey%]
   Output:""
   CodeOutput:""
   BuildDir:""
-  Log:FALSE
+  Log:TRUE
   Map:FALSE
   UTF8Mode:FALSE
-  Debug:FALSE
+  Debug:TRUE
 %]

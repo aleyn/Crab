@@ -33,7 +33,7 @@ interface System::Swit
  * Row: 第几行,默认是第1行
  * Col: 第几列,默认是第1列
  */
-extern Display(Text, Row, Col);
+extern Display(string Text[30], Row, Col);
 
 function ShowMyInfo()
 {
@@ -47,7 +47,7 @@ const SWITCH_EVENT = 0x01000000;
 
 //当第1组开关拨动的时候
 //A1~A4
-event SWITCH_EVENT + 1
+event OnSwitch1 : SWITCH_EVENT + 1
 {
   var Value;
   
