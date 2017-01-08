@@ -113,6 +113,9 @@ CrabString CrabExtern_GetTempString();
 //返回布尔型
 CrabBool CrabExtern_ReturnBoolValue(CrabBool ParamIndex);
 
+//返回空值
+CrabBool CrabExtern_ReturnNullValue();
+
 //返回整型
 CrabBool CrabExtern_ReturnIntValue(CrabInt Result);
 

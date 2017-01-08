@@ -30,9 +30,7 @@ CrabUint CrabStoreStream_WriteEEprom(TCrabStreamDevice Device, CrabPoint Buffer,
 * Function    : CrabStoreStream_Create()
 * Caption     : 建立文件流
 *  @Param     : Stream - 流结构
-*  @Param     : Type - 流类型
-*  @Param     : Offset - 绝对偏移位置
-*  @Param     : Size - 流大小
+*  @Param     : StoreInfo - 存储信息结构
 * Return      : CrabUint
 * Description : .
 ********************************************************************************/

@@ -13,7 +13,7 @@
   Delphi的接口（Interface）和 Case / In 语法。具体语法请看Demo目录。
 
 4.大脚蟹虚拟机实现端的开发语言是什么？
-  是Ansi C，目前在CBC和IAR上编译通过，并运行完好。
+  是Ansi C，目前在BCB和IAR上编译通过，并运行完好。
 
 5.大脚蟹项目资源
   项目网站：http://www.wisearm.com/crab
