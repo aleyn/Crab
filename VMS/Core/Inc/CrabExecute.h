@@ -24,10 +24,13 @@ CrabBool CrabExecute_Create(PCrabConfig Config);
 //释放环境
 CrabBool CrabExecute_Destroy();
 
+//复位环境
+CrabBool CrabExecute_Clear();
+
 //载入流
 CrabBool CrabExecute_LoadStream(PCrabStream CodeStream, PCrabStream StoreStream);
 
-//重新启动
+//重新启动应用
 CrabBool CrabExecute_Restart();
 
 //停止执行
@@ -47,6 +50,9 @@ CrabBool CrabExecute_EventDispatch();
 
 //抛出错误代码
 CrabVoid CrabExecute_RaiseError(CrabInt ErrCode);
+
+//获取错误代码
+CrabUint CrabExecute_GetErrorCode();
 
 #ifdef  __cplusplus
 }
