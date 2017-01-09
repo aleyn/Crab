@@ -4,18 +4,11 @@
 ========================================*/
 import MiCO;
 
-extern NetScan();
-extern NetConnect(SSID, Pass);
-extern NetGetDns(Domain);
-extern NetLocalIP();
-extern NetServerDate(Domain, DateOffset);
-extern NetServerTime(Domain, TimeOffset);
-
 const KEY_PRESS = 0x01000000;
 
 event OnKey1 : KEY_PRESS + 0x21
 {
-  var IP;
+  string IP[20];
   board.LED1 = LED_RED;
   IP = NetLocalIP();
   Print("Local IP is :" # IP # '\n');
@@ -25,14 +18,14 @@ event OnKey1 : KEY_PRESS + 0x21
 event OnKey2 : KEY_PRESS + 0x20
 {
   board.LED1 = LED_RED;
-  NetConnect("WU-FAMILY","adg82826812");
+  NetConnect("WIFI-ROUNT","123456");
   board.LED1 = LED_OFF;
 }
 
 event OnKey3 : KEY_PRESS + 0x11
 {
-  var IP;
-  var Domain = "www.baidu.com";
+  string IP[20];
+  string Domain = "www.baidu.com";
   board.LED1 = LED_RED;
   IP = NetGetDns(Domain);
   
@@ -48,7 +41,7 @@ event OnKey4 : KEY_PRESS + 0x10
 {
   board.LED1 = LED_RED;
   var Date, Time;
-  var Domain = "s2m.time.edu.cn";
+  string Domain = "s2m.time.edu.cn";
 
   Print("Connect to " # Domain #", Please Wait.\n");
 
@@ -77,6 +70,6 @@ main
    }
    until error;
 
-  //CloseEvent();
+  CloseEvent();
 }
 

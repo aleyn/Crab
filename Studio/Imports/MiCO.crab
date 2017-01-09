@@ -1,4 +1,15 @@
-import CrabSystem;
+/*========================================
+  Mico.crab
+                        write by aleyn.wu
+
+  Mico EMW3166 Support Interface.
+
+  please don't modify this file.
+
+  Create Date: 2016-11-15
+  Last Update: 2017-01-08
+========================================*/
+import System;
 
 const  LED_RED   = 2;
 const  LED_BLUE  = 1;
@@ -7,7 +18,7 @@ const  LED_OFF   = 0;
 
 extern TimerConfig(Timer, Period, Prescaler);
 extern Beep(Width, Count);
-extern WriteCOM(Msg);
+extern WriteCOM(string Text[255]);
 extern NetInfo();
 
 interface Board
@@ -113,3 +124,10 @@ interface Board::PWM7
   property C1    { set :  'setPWMC'; index: 0x71 }
   property W1    { set :  'setPWMW'; index: 0x71 }
 }
+
+extern NetScan();
+extern NetConnect(string SSID[30], string Pass[30]);
+extern NetGetDns(string Domain[50]);
+extern NetLocalIP();
+extern NetServerDate(string Domain[50], DateOffset);
+extern NetServerTime(string Domain[50], TimeOffset);

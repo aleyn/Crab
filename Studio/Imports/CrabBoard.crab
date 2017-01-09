@@ -1,3 +1,14 @@
+/*========================================
+  CrabBoard.crab
+                        write by aleyn.wu
+
+  Demo Board Support Interface.
+
+  please don't modify this file.
+
+  Create Date: 2015-06-15
+  Last Update: 2017-01-02
+========================================*/
 import System;
 
 const  LED_RED   = 2;
@@ -7,7 +18,7 @@ const  LED_OFF   = 0;
 
 extern TimerConfig(Timer, Period, Prescaler);
 extern Beep(Width, Count);
-extern WriteCOM(Msg);
+extern WriteCOM(string Text[255]);
 extern NetInfo();
 
 interface Board
