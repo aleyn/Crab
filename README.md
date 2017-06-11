@@ -1,38 +1,38 @@
-���з����ƽ̨
+大脚蟹开发平台
 =============================
 
-1.���
-  ���з��һ������Ƕ��ʽ��Ƭ��ϵͳ�������ƽ̨���������ÿ������׿�������Ӳ���ײ㿪�����Ӷ�ʹ�ü����õĿ�����ʽ��ר�Ŀ������Լ���Ӧ�ó���
-  ��һ���棬Ҳ������Ӳ���������ڿ���ģʽ��ʱ�򣬽����ṩӲ�������ӿڣ������ú���Ӳ������ֱ�ӱ�¶�ڳ�ѧ����ǰ���Ӷ�����Ӳ���������ȶ��ԡ�
+1.简介
+  大脚蟹是一个面向嵌入式单片机系统的虚拟机平台，它可以让开发者抛开繁锁的硬件底层开发，从而使用简单易用的开发方式，专心开发他自己的应用程序。
+  另一方面，也可以让硬件生产商在开发模式的时候，仅需提供硬件驱动接口，避免让核心硬件驱动直接暴露在初学者面前，从而保护硬件驱动的稳定性。
 
-2.�ص�
-	a.��Ӳ�����룬��ǰ����������ʦרעӦ�ó���Ŀ�����
-	b.ר��Ӳ��API�ӿڣ���Ӧ�ó������Ӳ���������ѡ�
-	c.����C#/Java�󲿷��﷨����󽵵�����ѧϰ�Ѷȡ�
-	d.Ӧ�ó����Ӳ�����������������룬�������ױ���Ӳ���������򣬸�����ʹ�ü��ܵķ�ʽ����Ӧ�ó���
-  e.�ṩһ���׿���������������Ķ��������������Ա��������û�������������Ӳ����־��أ�PC�������豸���������
+2.特点
+	a.软硬件分离，让前端软件工程师专注应用程序的开发。
+	b.专用硬件API接口，让应用程序控制硬件不再困难。
+	c.兼容C#/Java大部分语法，大大降低语言学习难度。
+	d.应用程序和硬件驱动程序物理隔离，不但彻底保护硬件驱动程序，更可以使用加密的方式保护应用程序。
+  e.提供一整套开发过程中所必须的东西，它包括语言编译器，用户程序下载器，硬件日志监控，PC端虚拟设备，虚拟机。
 
-3.�û��˿�������
-  ���з���û��˿������Բ���CRAB�﷨�����������ص�
-	a.���ݴ󲿷ֵ� C# / Java �﷨��
-	b.�ؼ��ֺͱ�ʶ�������ִ�Сд��
-	c.�ַ����ܷ���ʹ�ã�����֧�ֶ���д����
-	d.���е�����ʱ���ʽ��
-	e.��ר�õĽӿں͸�ʽ��������Ӳ����ͨ��
-	f.���е��¼�������
-	g.IF �﷨�� Switch/Case �﷨ ����ǿ����á�
-	h.֧����(Class)������(Property)��ʹ�÷��㡣
-	i.���������ӿ쿪�������ԡ�����
+3.用户端开发语言
+  大脚蟹的用户端开发语言采用CRAB语法，它有以下特点
+	a.兼容大部分的 C# / Java 语法。
+	b.关键字和标识符不区分大小写。
+	c.字符串很方便使用，并且支持多种写法。
+	d.独有的日期时间格式。
+	e.有专用的接口和格式，用于软硬件沟通。
+	f.独有的事件函数。
+	g.IF 语法和 Switch/Case 语法 更加强大好用。
+	h.支持类(Class)和属性(Property)，使用方便。
+	i.还有其它加快开发的特性。。。
 
-4.�����ʵ�ֶ˵Ŀ�������
-  ��Ansi C��Ŀǰ��BCB��IAR�ϱ���ͨ������������á�
+4.虚拟机实现端的开发语言
+  是Ansi C，目前在BCB和IAR上编译通过，并运行完好。
 
-5.���з��Ŀ��Դ
-  ��Ŀ��վ��http://www.wisearm.com/crab
-  ������Դ��https://github.com/aleyn/Crab
-  QQȺ�飺3603821
+5.大脚蟹项目资源
+  项目网站：http://www.wisearm.com/crab
+  程序资源：https://github.com/aleyn/Crab
+  QQ群组：3603821
 
-6.����...
+6.待续...
 
 Crab Development Platform
 =============================
@@ -65,8 +65,8 @@ Crab Development Platform
    Is Ansi C, currently compiled on BCB and IAR, and is running well.
 
 5.Crab project website and resource
-  Website��http://www.wisearm.com/crab
-  resource��https://github.com/aleyn/Crab
+  Website：http://www.wisearm.com/crab
+  resource：https://github.com/aleyn/Crab
   QQ Group: 3603821
 
 6.To be continued ...
