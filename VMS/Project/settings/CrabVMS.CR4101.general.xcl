@@ -1,0 +1,13 @@
+"C:\IAR\ARM\v7502\arm\bin\armproc.dll" 
+
+"C:\IAR\ARM\v7502\arm\bin\armjlink2.dll" 
+
+"Q:\WiseArm\CrabScript-´ó½ÅÐ·ÒýÇæ\CrabVMS-v2.0\Bin\CrabVMS-CR4101.out" 
+
+--plugin "C:\IAR\ARM\v7502\arm\bin\armbat.dll" 
+
+--device_macro "C:\IAR\ARM\v7502\arm\config\debugger\ST\STM32F4xx.dmac" 
+
+
+
+

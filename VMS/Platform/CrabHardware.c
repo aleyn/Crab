@@ -43,34 +43,6 @@ const uint8_t TIM_AF[TIM_ADDR_MAX] =
   GPIO_AF_TIM13, GPIO_AF_TIM14, 0, 0
 };
 
-const uint32_t TIM_IO[TIM_ADDR_MAX*4] = 
-{
-  /*1*/ 0,        0,        0,        0,
-  /*2*/ GPIO_PA5, GPIO_PA1, 0,        GPIO_PA3,
-  /*3*/ GPIO_PA6, GPIO_PA7, GPIO_PB0, GPIO_PB1,
-  /*4*/ 0,        0,        GPIO_PB8, GPIO_PB9,
-  /*5*/ GPIO_PA0, GPIO_PA1, 0,        GPIO_PA3,
-  /*6*/ 0,        0,        0,        0,
-  /*7*/ 0,        0,        0,        0,
-  /*8*/ 0,        0,        0,        0,
-  /*9*/ GPIO_PA2, GPIO_PA3, 0,        0,
- /*10*/ GPIO_PB8, 0,        0,        0,
- /*11*/ GPIO_PB9, 0,        0,        0,
- /*12*/ 0,        0,        0,        0,
- /*13*/ 0,        0,        0,        0,
- /*14*/ 0,        0,        0,        0,
- /*15*/ 0,        0,        0,        0,
- /*16*/ 0,        0,        0,        0,
-};
-
-#define GPIO_ADDR_MAX 10
-const uint32_t GPIO_ADDR[GPIO_ADDR_MAX] = 
-{
-  GPIO_PA0, GPIO_PA1, GPIO_PA3, GPIO_PA5,
-  GPIO_PA6, GPIO_PA7, GPIO_PB0, GPIO_PB1,
-  GPIO_PB8, GPIO_PB9
-};
-
 uint8_t KeyCount = 0;
 uint8_t KeyBuffer[KEY_BUF_MAX] = {0};
 uint8_t KeyRead = 0;
@@ -78,27 +50,11 @@ uint8_t KeyWrite = 0;
 uint8_t KeyDown = 0;
 uint8_t KeyDelay = 0xFF;
 
+uint16_t BoardKey = 0;
+uint16_t RemoteKey = 0;
 
-/*******************************************************************************
-* Function    : fputc
-* Caption     : 支援Printf的函数
-*  @Param     : 1.ch - 
-*  @Param     : 2.f - 
-* Return      : int
-* Description : .
-*******************************************************************************/
-int fputc(int ch, FILE *f)
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART */
-  USART_SendData(PRINTF_COM, (uint8_t) ch);
-
-  /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(PRINTF_COM, USART_FLAG_TC) == RESET)
-  {}
-
-  return ch;
-}
+uint32_t TIM_Period[TIM_ADDR_MAX];
+CrabMotorDef CrabMotor[2];
 
 /*******************************************************************************
 * Function    : CrabHW_InitExtern
@@ -108,6 +64,60 @@ int fputc(int ch, FILE *f)
 void CrabHW_InitExtern()
 {
   Device_Init(); 
+}
+
+/*******************************************************************************
+* Function    : CrabHW_Reset
+* Caption     : 硬件软复位
+* Description : .
+*******************************************************************************/
+void CrabHW_Reset()
+{
+  KeyCount = 0;
+  KeyRead = 0;
+  KeyWrite = 0;
+  BoardKey = 0;
+  RemoteKey = 0;
+  
+  CrabHW_LED_Change(LED_1, LED_OFF);
+  CrabHW_LED_Change(LED_2, LED_OFF);
+  
+  CrabMotor[0].TIM  = MOTO1_TIM;
+  CrabMotor[0].A_CH = MOTO1_A_CH;
+  CrabMotor[0].A_IO = MOTO1_A_IO;
+  CrabMotor[0].B_CH = MOTO1_B_CH;
+  CrabMotor[0].B_IO = MOTO1_B_IO;
+
+  CrabMotor[1].TIM  = MOTO2_TIM;
+  CrabMotor[1].A_CH = MOTO2_A_CH;
+  CrabMotor[1].A_IO = MOTO2_A_IO;
+  CrabMotor[1].B_CH = MOTO2_B_CH;
+  CrabMotor[1].B_IO = MOTO2_B_IO;
+  
+  CrabMotor[0].Active = 0;
+  CrabHW_MotorControl(&CrabMotor[0], 0);
+
+  CrabMotor[1].Active = 0;
+  CrabHW_MotorControl(&CrabMotor[1], 0);
+  
+}
+
+/*******************************************************************************
+* Function    : CrabHW_PutString
+* Caption     : 输出字符串到标准设备
+*  @Param     : 1.Data - 
+*  @Param     : 2.Length - 
+* Return      : int
+* Description : .
+*******************************************************************************/
+void CrabHW_PutString(char *Data, uint32_t Length)
+{
+  while (Length)
+  {
+    putchar(*Data);    
+    Data++;
+    Length--;
+  }
 }
 
 /*******************************************************************************
@@ -147,10 +157,11 @@ void CrabHW_LED_Change(uint32_t LED_PIN, uint8_t Status)
 * Return      : uint32_t
 * Description : .
 *******************************************************************************/
-uint32_t CrabHW_KEY_Scan()
+uint16_t CrabHW_KEY_Scan()
 {
-  uint32_t Key = 0;
+  uint16_t Key = 0;
   
+#if KEY_SCAN == 1
   GPIO_InitPort(KEY_1, GPIO_MODE_INU, 0);
   GPIO_InitPort(KEY_2, GPIO_MODE_INU, 0);
 
@@ -176,13 +187,27 @@ uint32_t CrabHW_KEY_Scan()
   {
     Key = 0x21;
   }
+#else
+  GPIO_InitPort(KEY_1, GPIO_MODE_GET, 0);
+  GPIO_InitPort(KEY_2, GPIO_MODE_GET, 0);
+
+  if (GPIO_GetInputBit(KEY_1) == 0)
+  {
+    Key = 0x10;
+  }
+  
+  if (GPIO_GetInputBit(KEY_2) == 0)
+  {
+    Key = 0x20;
+  }
+#endif
   
   if (Key)
   {
     if (KeyDown != Key)
     { 
       KeyDown = Key;
-      Key |= 0x00000100;
+      Key |= 0x0100;
       KeyDelay = 10;
     }
     else
@@ -200,7 +225,9 @@ uint32_t CrabHW_KEY_Scan()
     }
     else
     {
+    #if KEY_BUFFER_MODE == 1
       CrabHW_KEY_Write(KeyDown);
+    #endif
       Key = KeyDown;
       KeyDown = 0;
     }
@@ -266,7 +293,10 @@ void CrabHW_KEY_Write(uint8_t Key)
 *******************************************************************************/
 void CrabHW_BEEP_Enable()
 {
-  CrabHW_TIM_Config(BEP_TIM, BEP_PULSE, BEP_SCALE);
+  if (BEP_IO)
+  {
+    CrabHW_TIM_Config(BEP_TIM, BEP_PULSE, BEP_SCALE);
+  }
 }
 
 /*******************************************************************************
@@ -276,7 +306,10 @@ void CrabHW_BEEP_Enable()
 *******************************************************************************/
 void CrabHW_BEEP_Disable()
 {
-  CrabHW_TIM_Config(BEP_TIM, 0, 0);
+  if (BEP_IO)
+  {
+    CrabHW_TIM_Config(BEP_TIM, 0, 0);
+  }
 }
 
 /*******************************************************************************
@@ -286,7 +319,10 @@ void CrabHW_BEEP_Disable()
 *******************************************************************************/
 void CrabHW_BEEP_Start()
 {
-  CrabHW_TIM_SetPwm(BEP_TIM, BEP_CHANNEL, BEP_WIDTH);
+  if (BEP_IO)
+  {
+    CrabHW_TIM_SetPwmWithGPIO(BEP_TIM, BEP_CHANNEL, BEP_IO, BEP_WIDTH);
+  }
 }
 
 /*******************************************************************************
@@ -296,7 +332,10 @@ void CrabHW_BEEP_Start()
 *******************************************************************************/
 void CrabHW_BEEP_Stop()
 {
-  CrabHW_TIM_SetPwm(BEP_TIM, BEP_CHANNEL, 0);
+  if (BEP_IO)
+  {
+    CrabHW_TIM_SetPwmWithGPIO(BEP_TIM, BEP_CHANNEL, BEP_IO, 0);
+  }
 }
 
 /*******************************************************************************
@@ -402,13 +441,12 @@ void CrabHW_TIM_Config(uint8_t TIM, uint32_t Period, uint32_t Prescaler)
 *  @Param     : 3.Value - 
 * Description : .
 *******************************************************************************/
-void CrabHW_TIM_SetPwm(uint8_t TIM, uint8_t OC, uint32_t Value)
+void CrabHW_TIM_SetPwmWithGPIO(uint8_t TIM, uint8_t OC, uint32_t GIO, uint32_t Value)
 {   
-  if (TIM == 0) return;
+  if ((TIM == 0) || (GIO == 0)) return;
   TIM --;
-  
+
   uint32_t ADDR = TIM_ADDR[TIM];
-  uint32_t GIO = TIM_IO[TIM * 4 + OC - 1];
   uint8_t  AF  = TIM_AF[TIM];
   uint16_t OCE;
   
@@ -461,5 +499,85 @@ void CrabHW_TIM_SetPwm(uint8_t TIM, uint8_t OC, uint32_t Value)
       TIM_SetCompare4((TIM_TypeDef *) ADDR, Value);
       break;
     }
+  }
+}
+
+/*******************************************************************************
+* Function    : CrabHW_MotorControl
+* Caption     : 马达控制
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+void CrabHW_MotorControl(CrabMotorDef *Motor, uint8_t Reset)
+{
+  uint32_t Frequ;
+  uint32_t Period;
+  uint32_t Prescaler;
+  
+  if ((Motor->TIM == 0)) return;
+  
+  if (! Motor->Active)
+  {
+    CrabHW_TIM_SetPwmWithGPIO(Motor->TIM, Motor->A_CH, Motor->A_IO, 0);
+    CrabHW_TIM_SetPwmWithGPIO(Motor->TIM, Motor->B_CH, Motor->B_IO, 0);
+    CrabHW_TIM_Config(Motor->TIM, 0, 0);
+    
+    return;
+  }
+  
+  if (Reset)
+  {
+    Frequ = Motor->Frequ;
+    
+    if (Frequ == 0)
+    {
+      Prescaler = 1;
+      Period = 0;
+    }
+    else if (Frequ <= 10)
+    {
+      Prescaler = 10000;
+      Period = 9600 / Frequ;
+    }
+    else if (Frequ <= 100)
+    {
+      Prescaler = 1000;
+      Period = 96000 / Frequ;
+    }
+    else if (Frequ <= 1000)
+    {
+      Prescaler = 100;
+      Period = 960000 / Frequ;
+    }
+    else if (Frequ <= 10000)
+    {
+      Prescaler = 10;
+      Period = 9600000 / Frequ;
+    }
+    else
+    {
+      Prescaler = 1;
+      Period = 96000000 / Frequ;
+    }
+    
+    TIM_Period[Motor->TIM] = Period;
+    CrabHW_TIM_Config(Motor->TIM, Period, Prescaler - 1);
+  }
+  else
+  {
+    Period = TIM_Period[Motor->TIM];
+  }
+  
+  Prescaler = Period * (Motor->Speed) / 100;
+  
+  if (Motor->Polar == 0)
+  {
+    CrabHW_TIM_SetPwmWithGPIO(Motor->TIM, Motor->B_CH, Motor->B_IO, 0);
+    CrabHW_TIM_SetPwmWithGPIO(Motor->TIM, Motor->A_CH, Motor->A_IO, Prescaler);
+  }
+  else
+  {
+    CrabHW_TIM_SetPwmWithGPIO(Motor->TIM, Motor->A_CH, Motor->A_IO, 0);
+    CrabHW_TIM_SetPwmWithGPIO(Motor->TIM, Motor->B_CH, Motor->B_IO, Prescaler);
   }
 }

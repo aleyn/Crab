@@ -6,7 +6,6 @@
 * Last Update       : 2016-12-31
 * Description       : 常用工具集
 ********************************************************************************/
-
 #ifndef __CRAB_UTILITY__
 #define __CRAB_UTILITY__
 
@@ -19,10 +18,22 @@ extern "C" {
 #pragma pack(1)
 typedef struct
 {
-  CrabByte Major;
-  CrabByte Minor;
-  CrabWord Build;
+  CrabByte      Major;
+  CrabByte      Minor;
+  CrabUShort    Build;
 } TCrabVersion, *PCrabVersion;
+
+#pragma pack(1)
+typedef struct
+{
+  CrabPoint     Memory;         //用户内存地址
+  CrabUint      MemorySize;     //用户内存大小
+  CrabPoint     Cache;          //指令缓冲区
+  CrabUint      CacheSize;      //指令缓冲区大小
+  CrabUint      FifoCount;      //事件FIFO个数
+  CrabUint      StrPoolCount;   //全长字符串缓冲池个数
+  CrabUint      ArrayDimCount;  //数组维数栈个数
+} TCrabConfig, *PCrabConfig;
 
 //将地址或值转为三字节
 CrabUint    CrabThreeByte(CrabUint Addr);

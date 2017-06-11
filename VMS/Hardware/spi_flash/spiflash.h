@@ -44,6 +44,7 @@
 #define sFLASH_CMD_WREN           0x06  /* Write enable instruction */
 #define sFLASH_CMD_WRDI           0x04  /* Write Disable instruction */
 #define sFLASH_CMD_RDSR           0x05  /* Read Status Register instruction  */
+#define sFLASH_CMD_RDSR2          0x35  /* Read Status Register 2 instruction  */
 #define sFLASH_CMD_WRSR           0x01  /* Write Status Register instruction */
 #define sFLASH_CMD_EWSR           0x50  /* Enable Write Status Register instruction */
 #define sFLASH_CMD_RDID           0x9F  /* Read identification */
@@ -53,6 +54,7 @@
 #define sFLASH_CMD_BE             0xC7  /* Bulk Erase instruction */
 #define sFLASH_CMD_EBSY           0x70  /* Enable SO as RD/BY instruction */
 #define sFLASH_CMD_DBSY           0x80  /* Disable SO as RD/BY instruction */
+#define sFLASH_CMD_RDUID          0x4B  /* Read Union identification */
 
 #define sFLASH_WIP_FLAG           0x01  /* Write In Progress (WIP) flag */
 
@@ -67,7 +69,8 @@
 #define sFLASH_M25P64_ID          0x202017
 #define sFLASH_M25P32_ID          0x202016   
 #define sFLASH_M25P16_ID          0x202015
-  
+#define sFLASH_W25Q64FV_ID        0xEF4017
+
 /* Exported macro ------------------------------------------------------------*/
 /* Select sFLASH: Chip Select pin low */
 #define sFLASH_CS_LOW()       GPIO_SetBit(sFLASH_SPI_CS_PIN, 0)
@@ -75,6 +78,8 @@
 #define sFLASH_CS_HIGH()      GPIO_SetBit(sFLASH_SPI_CS_PIN, 1)   
 
 #define sFLASH_SO_STAT()      GPIO_GetInputBit(sFLASH_SPI_MISO_PIN)
+
+#define sFLASH_PageWrite      sFLASH_PageWriteW25
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -85,11 +90,16 @@ void sFLASH_LowLevel_Init(void);
 void sFLASH_EraseSector(uint32_t SectorAddr, uint32_t SectorSize);
 void sFLASH_EraseBulk(void);
 void sFLASH_ByteWrite(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite);
-void sFLASH_PageWrite(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite);
+
+void sFLASH_PageWriteS25(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite);
+void sFLASH_PageWriteW25(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite);
+
 void sFLASH_WriteBuffer(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite);
 void sFLASH_ReadBuffer(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead);
 uint32_t sFLASH_ReadID(void);
+void sFLASH_ReadUID(uint8_t* pBuffer);
 uint8_t sFLASH_ReadStatus(void);
+uint8_t sFLASH_ReadExtStatus(void);
 void sFLASH_WriteStatus(uint8_t Status);
 void sFLASH_StartReadSequence(uint32_t ReadAddr);
 

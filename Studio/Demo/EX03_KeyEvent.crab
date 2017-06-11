@@ -1,0 +1,100 @@
+/*=======================================================
+    Crab Board Demo
+    按键事件演示程序
+=======================================================*/
+import CR4101;
+
+byte Led1Flag;
+byte Led2Flag;
+
+//当使用按下F1按键的时候，将会进入下面的事件函数
+//事件函数：OnKey1         这个函数名是可选的。
+//事件标志：KEY_PRESS_F1   每一种事件都有自己惟一的标志
+event OnKey1 : KEY_PRESS_F1
+{
+  if (Led1Flag != LED_OFF)
+  {
+   Led1Flag = LED_OFF;
+   PrintLn('now LED1 is OFF.');
+  }
+  else
+  {
+   Led1Flag = LED_BLUE;
+   PrintLn('now LED1 is BLUE.');
+  }
+
+  Board.Led1 = Led1Flag;
+}
+
+//当使用按下F2按键的时候，将会进入下面的事件函数
+event OnKey2 : KEY_PRESS_F2
+{
+  if (Led1Flag != LED_OFF)
+  {
+   Led1Flag = LED_OFF;
+   PrintLn('now LED1 is OFF.');
+  }
+  else
+  {
+   Led1Flag = LED_RED;
+   PrintLn('now LED1 is RED.');
+  }
+
+  Board.Led1 = Led1Flag;
+}
+
+//当使用按下F3按键的时候，将会进入下面的事件函数
+event OnKey3 : KEY_PRESS_F3
+{
+  if (Led2Flag != LED_OFF)
+  {
+   Led2Flag = LED_OFF;
+   PrintLn('now LED2 is OFF.');
+  }
+  else
+  {
+   Led2Flag = LED_BLUE;
+   PrintLn('now LED2 is BLUE.');
+  }
+
+  Board.Led2 = Led2Flag;
+}
+
+//当使用按下F4按键的时候，将会进入下面的事件函数
+event OnKey4 : KEY_PRESS_F4
+{
+  if (Led2Flag != LED_OFF)
+  {
+   Led2Flag = LED_OFF;
+   PrintLn('now LED2 is OFF.');
+  }
+  else
+  {
+   Led2Flag = LED_RED;
+   PrintLn('now LED2 is RED.');
+  }
+
+  Board.Led2 = Led2Flag;
+}
+
+
+main
+{
+  //显示欢迎信息
+  PrintLn('=== Crab Board Event Demo ===');  
+
+  //初始化全局变量
+  Led1Flag = 0;
+  Led2Flag = 0;
+  
+  //打开事件驱动机制
+  OpenEvent();  
+  
+  repeat
+  {
+  }
+  until error;
+  
+  //关闭事件驱动机制
+  CloseEvent();
+}

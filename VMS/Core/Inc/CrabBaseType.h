@@ -29,44 +29,87 @@ extern "C" {
 #define  False     0                   //逻辑假
 #define  True      !False              //逻辑真
 
-#define  CrabNull           null              //空指针
-#define  CrabNullString     (CrabString)(0)   //空字符串
-#define  CrabTrue           0x00000001        //True  - CrabBool 真值
-#define  CrabFalse          0x00000000        //False - CrabBool 否值
-  
-#ifdef  __ICCARM__  
-#define __flash _Pragma("location=\".rodata\"")
-#define __cache _Pragma("location=\".ccmram\"")
-#define __ram   _Pragma("location=\".data\"")
-#else
-#define __flash
-#define __cache
-#define __ram
-#endif
+#define  CrabNull           null        //空指针
+#define  CrabTrue           1           //True  - CrabBool 真值
+#define  CrabFalse          0           //False - CrabBool 否值
+
+#define CRABTYPE_VOID       0x01
+#define CRABTYPE_BOOL       0x11
+
+#define CRABTYPE_TINY       0x21
+#define CRABTYPE_SHORT      0x22
+#define CRABTYPE_INT        0x24
+#define CRABTYPE_LONG       0x28
+
+#define CRABTYPE_BYTE       0x31
+#define CRABTYPE_USHORT     0x32
+#define CRABTYPE_UINT       0x34
+#define CRABTYPE_ULONG      0x38
+
+#define CRABTYPE_FLOAT      0x44
+#define CRABTYPE_DOUBLE     0x48
+
+#define CRABTYPE_CHAR       0x52
+#define CRABTYPE_STRING     0x54
+
+#define CRABTYPE_TIME       0x64
+#define CRABTYPE_DATE       0x74
+#define CRABTYPE_DATETIME   0x78
+
+#define CRABTYPE_ARRAY      0x84
+#define CRABTYPE_OBJECT     0x94
 
 //基本类型
-typedef          char  CrabChar;      //字符型
-typedef unsigned char  CrabByte;      //单字节
-typedef unsigned short CrabWord;      //双字节
-typedef unsigned int   CrabUint;      //四字节，无符号整型
-typedef unsigned long  CrabULong;     //八字节，无符号长整型
-typedef unsigned int   CrabBool;      //布尔型
-typedef          int   CrabInt;       //有符号整形
-typedef          long  CrabLong;      //有符号长整型
-typedef          float CrabFloat;     //浮点型
-typedef unsigned int   CrabUID;       //惟一键值
-typedef unsigned int   CrabHandle;    //句柄型
-typedef          void  CrabVoid;      //无类型
+typedef          void   CrabVoid;      //无类型
+typedef unsigned char   CrabBool;      //布尔型
+typedef          char   CrabChar;      //字符型，单字节ANSI
+#ifdef __BORLANDC__
+typedef         wchar_t CrabText;      //文本型，双字节UNICODE
+#else
+typedef         short   CrabText;      //文本型，双字节UNICODE
+#endif
+typedef unsigned char   CrabByte;      //单字节
+typedef unsigned short  CrabUShort;    //双字节
+typedef unsigned int    CrabUint;      //四字节，无符号整型
+typedef unsigned long   CrabULong;     //八字节，无符号长整型
+typedef          char   CrabTiny;      //有符号单字节
+typedef          short  CrabShort;     //有符号双字节
+typedef          int    CrabInt;       //有符号整形
+typedef          long   CrabLong;      //有符号长整型
+typedef          float  CrabFloat;     //单精度浮点型
+typedef          double CrabDouble;    //双精度浮点型
+typedef unsigned int    CrabUID;       //惟一键值
+typedef unsigned int    CrabHandle;    //句柄型
+typedef          int    CrabState;     //状态型
 
-typedef CrabChar      *PCrabChar;
-typedef CrabByte      *PCrabByte;
-typedef CrabWord      *PCrabWord;
-typedef CrabUint      *PCrabUint;
-typedef CrabBool      *PCrabBool;
-typedef CrabFloat     *PCrabFloat;
-typedef CrabVoid      *CrabPoint;
+typedef CrabChar       *PCrabChar;
+typedef CrabText       *PCrabText;
+typedef CrabByte       *PCrabByte;
+typedef CrabUShort     *PCrabUShort;
+typedef CrabUint       *PCrabUint;
+typedef CrabULong      *PCrabULong;
+typedef CrabTiny       *PCrabTiny;
+typedef CrabShort      *PCrabShort;
+typedef CrabInt        *PCrabInt;
+typedef CrabLong       *PCrabLong;
+typedef CrabBool       *PCrabBool;
+typedef CrabFloat      *PCrabFloat;
+typedef CrabDouble     *PCrabDouble;
+typedef CrabVoid       *CrabPoint;
 
-typedef CrabChar      *CrabAnsi; //C语言缺省字符串类型
+typedef CrabChar       *CrabAnsi; //C语言缺省字符串类型
+typedef CrabText       *CrabWide; //系统缺省宽字符串类型
+
+typedef union
+{
+  CrabText              Text;     //国际字符型
+  CrabUShort            Unicode;  //国际UNICODE码
+  struct
+  {
+    CrabChar            Char1;    //ANSI 字符1
+    CrabChar            Char2;    //ANSI 字符2
+  };
+} CrabUnicode, *PCrabUnicode;
 
 #pragma pack(1)
 //日期型
@@ -76,7 +119,7 @@ typedef union
   CrabDate            Date;
   struct
   {
-    CrabWord          Year;
+    CrabUShort        Year;
     CrabByte          Month;
     CrabByte          Day;
   };
@@ -104,55 +147,70 @@ typedef union
 //日期时间型
 typedef union
 {
-  CrabDate       Date;
-  CrabTime       Time;
+  CrabULong     FullValue;
+  struct
+  {
+    CrabTime    Time;            //时间在低位
+    CrabDate    Date;            //日期在高位
+  };
+  struct
+  {
+    CrabUShort    LowTime;         //低位值，双字节
+    CrabUShort    HighTime;        //高位值，双字节
+    CrabUShort    LowDate;         //低位值，双字节
+    CrabUShort    HighDate;        //高位值，双字节
+  };
 } TCrabDatetime, *PCrabDatetime, CrabDatetime;  //日期时间型
 
 //字符串型，仅系统用，实际申请内存大小为原始长度+3;
 typedef struct
 {
-  CrabByte Size;                           //字符串内存大小;
-  CrabByte Len;                            //字符串当前长度，Len <= Size;
-  CrabChar Data[0];                        //字符串数据，(最后一个字符为\0，兼容ANSI C的方式)
+  CrabShort     Refer;                     //字符串引用计数器
+  CrabByte      Size;                      //字符串内存大小;
+  CrabByte      Len;                       //字符串当前长度，Len <= Size;
+  CrabChar      Data[0];                   //字符串文本内容
 } TCrabString, *PCrabString, *CrabString;  //字符串型
 
 //双字节地址
 typedef union
 {
-  CrabWord Addr;
-  CrabByte Addrs[2];
+  CrabUShort    Addr;
+  CrabByte      Addrs[2];
 } TCrabUnionWord;               //双字节共用
 
 //三字节地址
 typedef union
 {
-  CrabByte Values[3];          //数组值，三字节
+  CrabByte      Values[3];          //数组值，三字节
   struct
   {
-    CrabWord LowValue;         //低位值，双字节
-    CrabByte HighValue;        //高位值，单字节
+    CrabUShort  LowValue;         //低位值，双字节
+    CrabByte    HighValue;        //高位值，单字节
   };
 } TCrabThree, TCrabCodeAddr;   //三字节地址
 
 //四节字联用
 typedef union
 {
-  CrabUint     FullValue;      //合并值，无符号整型
-  CrabInt      IntValue;       //有符号整型
-  CrabByte     Values[4];      //数组值，四字节
+  CrabUint        FullValue;
+  CrabByte        Values[4];      //数组值，4字节
   struct
   {
-    CrabWord   LowValue;       //低位值，双字节
-    CrabWord   HighValue;      //高位值，双字节
+    CrabUShort    LowValue;       //低位值，双字节
+    CrabUShort    HighValue;      //高位值，双字节
   };
-  struct  
+} TCrabUnion, *PCrabUnion, CrabUnion;       //四节字联用
+
+typedef union
+{
+  CrabULong   LongValue;
+  CrabByte    Values[8];
+  struct
   {
-    CrabByte   ByteValue0;
-    CrabByte   ByteValue1;
-    CrabByte   ByteValue2;
-    CrabByte   ByteValue3;
+    CrabUnion LowUnion;
+    CrabUnion HighUnion;
   };
-} TCrabUnion, CrabUnion;                  //四节字联用
+} TCrabLongUnion, *PCrabLongUnion, CrabLongUnion;
 
 #ifdef  __cplusplus
 }

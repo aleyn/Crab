@@ -30,7 +30,9 @@ CrabUint CrabStoreStream_WriteEEprom(TCrabStreamDevice Device, CrabPoint Buffer,
 * Function    : CrabStoreStream_Create()
 * Caption     : 建立文件流
 *  @Param     : Stream - 流结构
-*  @Param     : StoreInfo - 存储信息结构
+*  @Param     : Type - 流类型
+*  @Param     : Offset - 绝对偏移位置
+*  @Param     : Size - 流大小
 * Return      : CrabUint
 * Description : .
 ********************************************************************************/
@@ -388,7 +390,16 @@ CrabUint CrabStoreStream_WriteFlash(TCrabStreamDevice Device, CrabPoint Buffer, 
     if ((StoreInfo->Addr + Count) <= StoreInfo->Size)
     {
       Addr = StoreInfo->Offset + StoreInfo->Addr; 
-      sFLASH_PageWrite(Buffer, Addr, Count);
+      
+      //
+      /*if ((Addr & 0x000000FF) > 0)
+      {
+        Addr += 0x100 - (Addr & 0x000000FF);
+      }*/
+      
+      sFLASH_WriteBuffer(Buffer, Addr, Count);
+      //sFLASH_PageWrite(Buffer, Addr, Count);
+      //sFLASH_ByteWrite(Buffer, Addr, Count);
       StoreInfo->Addr += Count;
       
       return Count;

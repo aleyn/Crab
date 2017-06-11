@@ -7,6 +7,7 @@
 * Description       : USB
 *******************************************************************************/
 
+#include "hardware.h"
 #include "usbd_conf.h"
 #include "usbd_gap.h"
 #include "portmacro.h"

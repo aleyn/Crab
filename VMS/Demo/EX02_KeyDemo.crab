@@ -1,0 +1,46 @@
+/*=======================================================
+    Crab Board Demo
+    按键演示程序
+=======================================================*/
+import CR4101;
+
+main
+{
+  PrintLn('=== Crab Board KeyPress Demo ===');
+
+  ushort Key = 0;
+  
+  //打开事件驱动机制
+  OpenEvent();  
+
+  repeat
+  {
+    //读取内置按键
+    Key = Board.Key;
+     
+    if (Key != 0 )
+    {
+      if (Key > 0xFF)
+      {
+        PrintLn('Key Down: ' # Key);
+      }
+      else
+      {
+        PrintLn('Key Up: ' # Key);
+      }
+    }
+
+    //读取遥控器按键
+    Key = Board.Input;
+
+    if (Key != 0 )
+    {
+      PrintLn('Remote Key: ' # Key);
+    }
+
+  } until error;
+
+  //关闭事件驱动机制
+  CloseEvent();
+}
+

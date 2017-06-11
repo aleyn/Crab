@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>CrabVMS/CR4101</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>344</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+    <Build><ColumnWidth0>23</ColumnWidth0><ColumnWidth1>913</ColumnWidth1><ColumnWidth2>243</ColumnWidth2><ColumnWidth3>60</ColumnWidth3></Build><Find-in-Files><ColumnWidth0>535</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>566</ColumnWidth2><ColumnWidth3>251</ColumnWidth3></Find-in-Files><TerminalIO/><Debug-Log><ColumnWidth0>25</ColumnWidth0><ColumnWidth1>1856</ColumnWidth1></Debug-Log><Select-Ambiguous-Definitions><ColumnWidth0>664</ColumnWidth0><ColumnWidth1>94</ColumnWidth1><ColumnWidth2>1138</ColumnWidth2></Select-Ambiguous-Definitions></Static>
+    <Windows>
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-22592-26362</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>CrabVMS</ExpandedNode><ExpandedNode>CrabVMS/APP</ExpandedNode><ExpandedNode>CrabVMS/Board</ExpandedNode><ExpandedNode>CrabVMS/Board/CR4101</ExpandedNode><ExpandedNode>CrabVMS/Crab</ExpandedNode><ExpandedNode>CrabVMS/Crab-Lib</ExpandedNode><ExpandedNode>CrabVMS/Crab/Core</ExpandedNode><ExpandedNode>CrabVMS/Crab/Core/inc</ExpandedNode><ExpandedNode>CrabVMS/Crab/Core/port</ExpandedNode><ExpandedNode>CrabVMS/Crab/Platform</ExpandedNode><ExpandedNode>CrabVMS/Crab/Platform/inc</ExpandedNode><ExpandedNode>CrabVMS/Crab/Platform/src</ExpandedNode><ExpandedNode>CrabVMS/Crab/Platform/src/STM32</ExpandedNode><ExpandedNode>CrabVMS/Crab/VMS</ExpandedNode><ExpandedNode>CrabVMS/Crab/VMS/inc</ExpandedNode><ExpandedNode>CrabVMS/Crab/VMS/src</ExpandedNode><ExpandedNode>CrabVMS/Output</ExpandedNode><ExpandedNode>CrabVMS/ST-LIBRARIES</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-22634-30046</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-9023-28381</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab><Tab><Identity>TabID-14437-11398</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-29874-18513</Identity><TabName>Ambiguous Definitions</TabName><Factory>Select-Ambiguous-Definitions</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\System\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>384</SelStart2><SelEnd2>384</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabHardware.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>28</YPos2><SelStart2>1898</SelStart2><SelEnd2>1917</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabHardware.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>71</YPos2><SelStart2>2959</SelStart2><SelEnd2>2959</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Board\CR4101\Hardware.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>24</YPos2><SelStart2>1320</SelStart2><SelEnd2>1330</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabUserApp.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>571</SelStart2><SelEnd2>571</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabUserApp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>1133</SelStart2><SelEnd2>1133</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabEvent.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>15</YPos2><SelStart2>1873</SelStart2><SelEnd2>1873</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Core\Inc\CrabFifo.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>7</YPos2><SelStart2>1032</SelStart2><SelEnd2>1032</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\VMS\CrabSystem.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>4</YPos2><SelStart2>492</SelStart2><SelEnd2>492</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\VMS\CrabSystem.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>24</YPos2><SelStart2>5536</SelStart2><SelEnd2>5536</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\VMS\CrabApplication.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>19</YPos2><SelStart2>1687</SelStart2><SelEnd2>1687</SelEnd2></Tab><ActiveTab>10</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Core\Inc\CrabExecute.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>9</YPos2><SelStart2>826</SelStart2><SelEnd2>826</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\RTOS\FreeRTOS\v8.2.3\tasks.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>3013</YPos2><SelStart2>102545</SelStart2><SelEnd2>102545</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00DC7998><key>iaridepm.enu1</key></Toolbar-00DC7998></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>778</Bottom><Right>435</Right><x>-2</x><y>-2</y><xscreen>148</xscreen><yscreen>140</yscreen><sizeHorzCX>77083</sizeHorzCX><sizeHorzCY>140281</sizeHorzCY><sizeVertCX>227604</sizeVertCX><sizeVertCY>781563</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>175</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>177</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>177355</sizeHorzCY><sizeVertCX>77083</sizeVertCX><sizeVertCY>140281</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

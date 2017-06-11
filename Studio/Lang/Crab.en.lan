@@ -100,6 +100,7 @@ Language:[%RootKey%]
   LAN_BTN_INC_DEBUG : "Include Debug"
 
   LAN_DEV_DOWNING : "Download binary data to device..."
+  LAN_DEV_FORMAT : "Format device datastore"
   LAN_DEV_CONNECTED : "UsbGap device connected."
   LAN_DEV_DISCONNECTED : "UsbGap device disconnected."
   LAN_DEV_IS_DROP :"UsbGap Device is drop"
@@ -134,5 +135,9 @@ Language:[%RootKey%]
   LAN_DEV_STOPPING_APP : "Stopping App..."
   LAN_DEV_STARTING_MONITOR : "Starting log monitor..."
   LAN_DEV_STOPPING_MONITOR : "Stopping log monitor..."
-  LAN_DEV_TEST_CONTROL : "Test control..."  
+  LAN_DEV_TEST_CONTROL : "Test control..."
+  LAN_DEV_CHECK_FLAG : "Check datastore flag"
+  LAN_DEV_UPDATE_FLAG : "Update datastore flag"
+  LAN_DEV_FORMAT_FIRST : "Format device datastore before download"
+  LAN_DEV_DEBUG_MODE : "Running in Debug Mode"
 %]

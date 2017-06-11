@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
+//#include <math.h>
 #include "CrabBaseType.h"
 #include "CrabString.h"
 #include "CrabErrorMsg.h"
@@ -24,6 +24,11 @@
 ********************************************************************************/
 CrabString  CrabErrorMessage(CrabInt ErrCode, CrabString Result)
 {
+  if (Result == null)
+  {
+    return Result;
+  }
+  
   switch (ErrCode)
   {
     case CrabErrorSuccess:
@@ -46,6 +51,11 @@ CrabString  CrabErrorMessage(CrabInt ErrCode, CrabString Result)
       CrabStringAssignAnsi(Result, "超出程序代码范围");
       break;
     }
+    case  CrabErrorSetupRegFaild:
+    {
+      CrabStringAssignAnsi(Result, "初始化寄存器失败");
+      break;
+    }
     case CrabErrorOutOfRegIndex:
     {
       CrabStringAssignAnsi(Result, "寄存器ID超出范围");
@@ -56,9 +66,19 @@ CrabString  CrabErrorMessage(CrabInt ErrCode, CrabString Result)
       CrabStringAssignAnsi(Result, "局部变量内存超出范围");
       break;
     }
+    case CrabErrorOutOfObjMemory:
+    {
+      CrabStringAssignAnsi(Result, "实例内存或堆超出范围");
+      break;
+    }
     case CrabErrorOutOfStackMemory:
     {
       CrabStringAssignAnsi(Result, "栈内存超出范围");
+      break;
+    }
+    case CrabErrorOutOfRegStrMemory:
+    {
+      CrabStringAssignAnsi(Result, "寄存器字符串ID超出范围");
       break;
     }
     case CrabErrorInvaildVarType:
@@ -79,6 +99,16 @@ CrabString  CrabErrorMessage(CrabInt ErrCode, CrabString Result)
     case CrabErrorInvaildCodeAddr:
     {
       CrabStringAssignAnsi(Result, "无效的代码地址");
+      break;
+    }
+    case CrabErrorInvaildObjAddr:
+    {
+      CrabStringAssignAnsi(Result, "无效的实例或数组地址");
+      break;
+    }
+    case CrabErrorInvaildStringCount:
+    {
+      CrabStringAssignAnsi(Result, "无效的字符串长度");
       break;
     }
     case CrabErrorNotEnoughTotalMemory:
@@ -109,6 +139,26 @@ CrabString  CrabErrorMessage(CrabInt ErrCode, CrabString Result)
     case  CrabErrorStackPopFaild:
     {
       CrabStringAssignAnsi(Result, "出栈失败");
+      break;
+    }
+    case  CrabErrorInvaildArrayDim:
+    {
+      CrabStringAssignAnsi(Result, "无效的数组维数类型");
+      break;
+    }
+    case  CrabErrorInvaildObjectSize:
+    {
+      CrabStringAssignAnsi(Result, "无效的类实例大小");
+      break;
+    }
+    case  CrabErrorInvaildAssignment:
+    {
+      CrabStringAssignAnsi(Result, "无效的赋值方式");
+      break;
+    }
+    case  CrabErrorInvaildFormula:
+    {
+      CrabStringAssignAnsi(Result, "无效的计算类型");
       break;
     }
     default:

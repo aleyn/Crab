@@ -1,0 +1,137 @@
+/*========================================
+  CR4101.crab
+                        write by aleyn.wu
+
+  CR4101 Board Support Interface.
+
+  please don't modify this file.
+
+  Create Date: 2015-06-15
+  Last Update: 2017-04-23
+========================================*/
+import System;
+
+//LED
+const  LED_OFF   = 0;  //LED关闭
+const  LED_ON    = 1;  //LED点亮
+const  LED_BLUE  = 1;  //LED点亮：蓝色
+const  LED_RED   = 2;  //LED点亮：红色
+
+//内置按键
+const  KEY_PRESS     = 0x01000000;
+const  KEY_PRESS_F1  = KEY_PRESS + 0x11;
+const  KEY_PRESS_F2  = KEY_PRESS + 0x10;
+const  KEY_PRESS_F3  = KEY_PRESS + 0x21;
+const  KEY_PRESS_F4  = KEY_PRESS + 0x20;
+
+//遥控器
+const  REMOTE_CONTROL     = 0x02000000;
+const  REMOTE_CONTROL_K0  = REMOTE_CONTROL + 0x01;
+const  REMOTE_CONTROL_K1  = REMOTE_CONTROL + 0x02;
+const  REMOTE_CONTROL_K2  = REMOTE_CONTROL + 0x04;
+const  REMOTE_CONTROL_K3  = REMOTE_CONTROL + 0x08;
+const  REMOTE_CONTROL_K4  = REMOTE_CONTROL + 0x12;
+const  REMOTE_CONTROL_K5  = REMOTE_CONTROL + 0x14;
+const  REMOTE_CONTROL_K6  = REMOTE_CONTROL + 0x18;
+const  REMOTE_CONTROL_K7  = REMOTE_CONTROL + 0x24;
+const  REMOTE_CONTROL_K8  = REMOTE_CONTROL + 0x28;
+const  REMOTE_CONTROL_K9  = REMOTE_CONTROL + 0x48;
+
+//基础硬件
+interface Board
+{
+  //按键输入
+  property ushort Key   { get : 'getKey';}
+
+  //其它输入
+  property ushort Input { get : 'getInput';}
+
+  //LED1显示
+  property byte LED1    { set : 'setLED'; index:1;}
+
+  //LED2显示
+  property byte LED2    { set : 'setLED'; index:2;}
+
+  //旋扭输入 0 - 100
+  property ushort  TWIST  { get: 'getSensor'; index:2;}
+
+  //光照传感器 0 -100
+  property ushort  LIGHT  { get: 'getSensor'; index:1;}  
+
+  //设置定时器
+  //Timer:     索引号
+  //Period:    频率
+  //Prescaler: 预分频
+  extern void TimerConfig(byte Timer, uint Period, uint Prescaler);
+
+  //蜂鸣器开关
+  //Width:鸣叫时间间隔，单位毫秒，以50毫秒为一个阶梯
+  //Count:鸣叫次数  
+  extern void Beep(byte Width, byte Count);
+}
+
+//通用IO控制
+interface Board::GPIO
+{
+  default extern {get:'getGPIO'; set:'setGPIO';}
+
+  property byte A1 {get; set; index: 1;}
+  property byte A2 {get; set; index: 2;}
+  property byte B1 {get; set; index: 3;}
+  property byte B2 {get; set; index: 4;}
+  property byte C1 {get; set; index: 5;}
+  property byte C2 {get; set; index: 6;}
+  property byte C3 {get; set; index: 7;}
+  property byte C4 {get; set; index: 8;}
+  property byte D1 {get; set; index: 9;}
+  property byte D2 {get; set; index: 10;}
+}
+
+interface Board::ADC
+{
+  default extern {get:'getADC';}
+
+  property default uint Config { set : 'setADC'; }
+  property uint A1 {get; index: 1;}
+  property uint A2 {get; index: 2;}
+  property uint B1 {get; index: 3;}
+  property uint B2 {get; index: 4;}
+  property uint C1 {get; index: 5;}
+  property uint C2 {get; index: 6;}
+  property uint C3 {get; index: 7;}
+  property uint C4 {get; index: 8;}
+  property uint D1 {get; index: 9;}
+  property uint D2 {get; index: 10;}
+}
+
+//马达1 接口定义
+interface Motor1
+{
+  //开关: true = 打开, false = 关闭
+  property boolean Active {get : 'getMotorActive'; set : 'setMotorActive'; index: 0x10;}
+
+  //速度: 0 - 100
+  property uint Speed {get : 'getMotorSpeed'; set : 'setMotorSpeed'; index: 0x11;}
+
+  //频率: 0 - 100000
+  property uint Frequ {get : 'getMotorFrequ'; set : 'setMotorFrequ'; index: 0x12;}
+
+  //极性: 0 = 正向, 1 = 反向
+  property byte Polar {get : 'getMotorPolar'; set : 'setMotorPolar'; index: 0x13;}
+}
+
+//马达2 接口定义
+interface Motor2
+{
+  //开关: true = 打开, false = 关闭
+  property boolean Active {get : 'getMotorActive'; set : 'setMotorActive'; index: 0x20;}
+
+  //速度: 0 - 100
+  property uint Speed {get : 'getMotorSpeed'; set : 'setMotorSpeed'; index: 0x21;}
+
+  //频率: 0 - 100000
+  property uint Frequ {get : 'getMotorFrequ'; set : 'setMotorFrequ'; index: 0x22;}
+
+  //极性: 0 = 正向, 1 = 反向
+  property byte Polar {get : 'getMotorPolar'; set : 'setMotorPolar'; index: 0x23;}
+}

@@ -1,0 +1,46 @@
+/*=======================================================
+    Crab Board Demo
+    按键事件演示程序
+=======================================================*/
+import CrabBoard;
+
+byte Key;
+
+event OnRemoteControl : REMOTE_CONTROL
+{
+  Board.Led1 = LED_BLUE;
+  Key = Board.Input;
+
+  Print('Remote Key: ' # Key # \r\n);
+
+  Delay(50);
+  Board.Led1 = LED_OFF;
+}
+
+event OnBoardKey : KEY_PRESS
+{
+  Board.Led2 = LED_RED;
+
+  Key = Board.Key;
+
+  Print('Board Key: ' # Key # \r\n);
+  Delay(50);
+  Board.Led2 = LED_OFF;
+}
+
+main
+{
+  Print('=== Crab Board Event Demo ==='\r\n);
+  
+  board.LED1 = LED_OFF;
+  board.LED2 = LED_OFF;
+  
+  OpenEvent();
+  
+  repeat
+  {
+  }
+  until error;
+   
+  CloseEvent();
+}

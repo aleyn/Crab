@@ -100,6 +100,7 @@ Language:[%RootKey%]
   LAN_BTN_INC_DEBUG : "包含调试信息"
 
   LAN_DEV_DOWNING : "正在下载数据到设备中..."
+  LAN_DEV_FORMAT : "低格设备存储器"
   LAN_DEV_CONNECTED : "UsbGap 设备已经连接."
   LAN_DEV_DISCONNECTED : "UsbGap 设备已经断开."
   LAN_DEV_IS_DROP :"UsbGap 设备异常断开"
@@ -135,4 +136,8 @@ Language:[%RootKey%]
   LAN_DEV_STARTING_MONITOR : "正在启动日志..."
   LAN_DEV_STOPPING_MONITOR : "正在关闭日志..."
   LAN_DEV_TEST_CONTROL : "测试控制中..."  
+  LAN_DEV_CHECK_FLAG : "检查设备存储器标志"
+  LAN_DEV_UPDATE_FLAG : "更新设备存储器标志"
+  LAN_DEV_FORMAT_FIRST : "下载前请先低格设备存储器"
+  LAN_DEV_DEBUG_MODE : "进入用户调试模式"
 %]

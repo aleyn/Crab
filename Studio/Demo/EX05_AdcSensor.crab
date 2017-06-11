@@ -1,0 +1,56 @@
+/*========================================
+    ADC Sensor demo
+    ADC和传感器演示程序
+========================================*/
+import CR4101;
+
+void Welcome()
+{
+  PrintLn('============ Crab.io ===============');
+  PrintLn('= Power by Crab SDK 2.0            =');
+  PrintLn('= Program by aleyn.wu              =');
+  PrintLn('= Support CR4101                   =');
+  PrintLn('=                                  =');
+  PrintLn('= ADC Sensor Demo                  =');
+  PrintLn('====================================');
+}
+
+main
+{
+  Welcome();
+
+  OpenEvent();
+
+  uint ADC1 = 0;
+  uint ADC2 = 0;
+  uint OldADC1 = 0;
+  uint OldADC2 = 0;
+
+  repeat
+  {
+    ADC1 = Board.TWIST;
+    ADC2 = Board.LIGHT;
+
+    if (ADC1 != OldADC1)
+    {
+      board.LED2 = LED_RED;
+      PrintLn("TWIST: " # ADC1); 
+      OldADC1 = ADC1;
+    }
+
+    if (ADC2 != OldADC2)
+    {
+      board.LED2 = LED_BLUE;
+      PrintLn("ADC2: " # ADC2); 
+      OldADC2 = ADC2;
+    }
+
+    Delay(50);
+
+    board.LED2 = LED_OFF;
+  }
+  until error;
+
+  CloseEvent();
+}
+

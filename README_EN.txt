@@ -1,20 +1,32 @@
-Crab Platform
+Crab Development Platform
 =============================
-1.What is Crab?
-  Crab is a virtual machine platform for embedded microcontroller systems that allows developers to focus on developing their own applications by using the easy-to-use approach to development.
-  On the other hand, can also allow hardware manufacturers in the development of the model, the only need to provide hardware-driven interface, 
-  to avoid the core hardware drivers directly exposed to the beginners in front of the hardware to protect the stability of the drive.
+1 Introduction
+  CRAB is a virtual machine platform for embedded microcontroller systems that allows developers to deviate from the underlying hardware development, 
+  using an easy-to-use development approach to develop their own applications.
+  On the other hand, you can also let the hardware manufacturer in the development mode, only need to provide hardware-driven interface, 
+  to avoid the core hardware drivers directly exposed to the beginners in front, thus protecting the stability of hardware-driven.
 
-2.What does Crab have?
-  Crab provides a complete set of necessary development process, including language compiler, user program downloader, hardware log monitoring, PC-side virtual devices, virtual machines.
+2. Features
+	A. Hardware and software separation, so that front-end software engineers focus on the development of applications.
+	B. Dedicated hardware API interface, so that the application control hardware is no longer difficult.
+	C. Compatible with C # / Java most of the syntax, greatly reducing the difficulty of language learning.
+	D. Physical isolation of applications and hardware drivers, not only to completely protect the hardware drivers, but also can use encryption to protect the application.
+	E. Provide a set of necessary things in the development process, which includes language compiler, user program downloader, hardware log monitoring, PC-side virtual devices, virtual machines.
 
-3.Crab client development language?
-  Crab client-side language is to use the author's own development of the syntax, the vast majority of compatible JavaScript syntax, 
-  a small number of other languages ??to join the excellent places, such as C# Class and Property
-  Delphi Interface and "Case / In" syntax. Specific syntax, please see the Demo directory.
+3. Client development language
+  client development language using CRAB syntax, it has the following characteristics
+	A. Compatible with most of the C # / Java syntax.
+	B. Keywords and identifiers are not case sensitive.
+	C. Strings are easy to use and support multiple wordings.
+	D. Unique date and time format.
+	E. There are dedicated interfaces and formats for hardware and software communication.
+	F. Unique event function.
+	G.IF syntax and Switch / Case syntax is more powerful and easy to use.
+	H. Support class (Class) and property (Property), easy to use.
+	I. There are other features that accelerate development.
 
-4.Crab virtual machine implementation side of the development of language?
-  Is Ansi C, currently compiled on BCB and IAR, and runs perfectly.
+4. Virtual machine to achieve the development language
+   Is Ansi C, currently compiled on BCB and IAR, and is running well.
 
 5.Crab project website and resource
   Website£ºhttp://www.wisearm.com/crab

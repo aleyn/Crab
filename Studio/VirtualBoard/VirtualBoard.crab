@@ -1,0 +1,65 @@
+/*========================================
+    虚拟开发板接口
+    Create Date: 2017-06-10 20:19
+========================================*/
+import System;
+
+//开关事件ID
+const SWITCH_EVENT = 0x01000000;
+
+// LED 接口
+interface System::LED
+{
+  property boolean A 
+  {
+    set: 'setLED'; 
+    index :1;
+  }
+}
+
+//旋扭接口
+interface System::Knob
+{
+  property float A 
+  {
+    get:'getKnob'; 
+    set:'setKnob';
+    index :1;
+  }
+  property float B 
+  {
+    get:'getKnob'; 
+    set:'setKnob';
+    index :2;
+  }
+}
+
+//按键开关接口
+interface System::Swit
+{
+  property uint A 
+  {
+    get: 'getSwitch'; 
+    set: 'setSwitch';
+    index :1;
+  }
+  property uint B 
+  {
+    get: 'getSwitch'; 
+    set: 'setSwitch';
+    index :2;
+  }
+  property uint C 
+  {
+    get: 'getSwitch'; 
+    set: 'setSwitch';
+    index :3;
+  }
+}
+
+/* LCD 显示程序
+ * Text: 要显示的文本
+ * Row: 第几行,默认是第1行
+ * Col: 第几列,默认是第1列
+ */
+extern void Display(string Text, int Row, int Col);

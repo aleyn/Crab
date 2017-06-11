@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log>
+        
+        
+      <ColumnWidth0>23</ColumnWidth0><ColumnWidth1>1858</ColumnWidth1></Debug-Log>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>23</ColumnWidth0><ColumnWidth1>1393</ColumnWidth1><ColumnWidth2>371</ColumnWidth2><ColumnWidth3>92</ColumnWidth3></Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>457</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        <col-names>
+          
+          
+        <item>Disassembly</item><item>_I0</item></col-names>
+        <col-widths>
+          
+          
+        <item>500</item><item>20</item></col-widths>
+        <DisasmHistory/>
+        
+        
+      <ShowCodeCoverage>1</ShowCodeCoverage><ShowInstrProfiling>1</ShowInstrProfiling></Disassembly>
+      <Register>
+        <RegFindHistory/>
+      </Register>
+      <Memory>
+        <MemGotoHistory/>
+        
+      <FindAsHex>0</FindAsHex></Memory>
+    <Locals><col-names><item>Location</item><item>Type</item><item>Value</item><item>Variable</item></col-names><col-widths><item>101</item><item>109</item><item>281</item><item>138</item></col-widths></Locals><StaticWatch><expressions><item/></expressions><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>176</item><item>150</item><item>100</item><item>100</item></col-widths></StaticWatch><Statics><excluded-vars/><excluded-mods/><col-names><item>Location</item><item>Module</item><item>Type</item><item>Value</item><item>Variable</item></col-names><col-widths><item>150</item><item>100</item><item>100</item><item>100</item><item>167</item></col-widths><sortOrder>0</sortOrder></Statics><Auto><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>277</item><item>95</item><item>95</item><item>134</item></col-widths></Auto><QuickWatch><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>100</item><item>150</item><item>100</item><item>100</item></col-widths><QWatchHistory/></QuickWatch><WATCH_1><expressions><item>USB_Tx_Flag</item><item>USB_Tx_Count</item><item>USB_Rx_Flag</item><item>USB_Rx_Count</item><item>USB_Log_Flag</item><item/></expressions><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>133</item><item>99</item><item>100</item><item>284</item></col-widths></WATCH_1><Breakpoints><col-names><item>Breakpoint</item><item>_I0</item></col-names><col-widths><item>500</item><item>35</item></col-widths></Breakpoints><CORES_WINDOW><PreferedWindows><Position>0</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item> </item><item>Core</item><item>Cycles</item><item>PC</item><item>Status</item></col-names><col-widths><item>30</item><item>100</item><item>150</item><item>150</item><item>100</item></col-widths></CORES_WINDOW><PROJECT_GUI_CSTAT><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>Check</item><item>File</item><item>Line</item><item>Message</item><item>Severity</item></col-names><col-widths><item>200</item><item>200</item><item>100</item><item>500</item><item>100</item></col-widths></PROJECT_GUI_CSTAT><TASKVIEW><Column0>200</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3><Column4>100</Column4><Column5>100</Column5><Column6>100</Column6><Column7>100</Column7><Column8>150</Column8></TASKVIEW></Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-13960-12310</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-13438-12320</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-14545-30577</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-24709-12314</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>CrabVMS</ExpandedNode><ExpandedNode>CrabVMS/Crab-Lib</ExpandedNode><ExpandedNode>CrabVMS/Crab-Platform</ExpandedNode><ExpandedNode>CrabVMS/Crab-Platform/src</ExpandedNode><ExpandedNode>CrabVMS/SYSTEM</ExpandedNode></NodeDict></Session>
+          </Tab>
+          <Tab>
+            <Identity>TabID-2689-12317</Identity>
+            <TabName>Disassembly</TabName>
+            <Factory>Disassembly</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-29707-12425</Identity>
+            <TabName>Register</TabName>
+            <Factory>Register</Factory>
+            <Session>
+              
+              
+              
+              
+            <State3>FS_DIEPTXF3</State3><State4>FS_HPTXFSIZ</State4><REG1>0</REG1><REG2>0</REG2><Group>23</Group><States>3</States><State0>DIEPTSIZ3</State0><State1>DOEPTSIZ3</State1><State2>DTXFSTS3</State2></Session>
+          </Tab>
+          <Tab>
+            <Identity>TabID-28661-12444</Identity>
+            <TabName>Memory</TabName>
+            <Factory>Memory</Factory>
+            <Session>
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+            <ZoneNumber>0</ZoneNumber><SelectionAnchor>0</SelectionAnchor><SelectionEnd>0</SelectionEnd><UnitsPerGroup>1</UnitsPerGroup><EndianMode>0</EndianMode><DataCovEnabled>0</DataCovEnabled><DataCovShown>0</DataCovShown><AutoRefresh>0</AutoRefresh><HScroll>0</HScroll><VScroll>0</VScroll></Session>
+          </Tab>
+        <Tab><Identity>TabID-26506-8547</Identity><TabName>Tasks</TabName><Factory>TASKVIEW</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd1><Wnd2><Tabs><Tab><Identity>TabID-25565-28937</Identity><TabName>Locals</TabName><Factory>Locals</Factory></Tab><Tab><Identity>TabID-31608-29029</Identity><TabName>Live Watch</TabName><Factory>StaticWatch</Factory></Tab><Tab><Identity>TabID-6975-29081</Identity><TabName>Quick Watch</TabName><Factory>QuickWatch</Factory></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-8021-29061</Identity><TabName>Auto</TabName><Factory>Auto</Factory></Tab><Tab><Identity>TabID-30563-29048</Identity><TabName>Statics</TabName><Factory>Statics</Factory><Session/></Tab><Tab><Identity>TabID-2270-29169</Identity><TabName>Watch 1</TabName><Factory>WATCH_1</Factory></Tab></Tabs><SelectedTab>1</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\System\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>384</SelStart2><SelEnd2>384</SelEnd2></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabHardware.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>28</YPos2><SelStart2>1898</SelStart2><SelEnd2>1917</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabHardware.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>71</YPos2><SelStart2>2959</SelStart2><SelEnd2>2959</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Board\CR4101\Hardware.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>24</YPos2><SelStart2>1320</SelStart2><SelEnd2>1330</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabUserApp.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>571</SelStart2><SelEnd2>571</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabUserApp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>1133</SelStart2><SelEnd2>1133</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Platform\CrabEvent.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>15</YPos2><SelStart2>1873</SelStart2><SelEnd2>1873</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Core\Inc\CrabFifo.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>7</YPos2><SelStart2>1032</SelStart2><SelEnd2>1032</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\VMS\CrabSystem.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>812</SelStart2><SelEnd2>812</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\VMS\CrabSystem.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>217</YPos2><SelStart2>5536</SelStart2><SelEnd2>5536</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\VMS\CrabApplication.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>233</YPos2><SelStart2>7255</SelStart2><SelEnd2>7255</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Core\Inc\CrabExecute.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>9</YPos2><SelStart2>826</SelStart2><SelEnd2>826</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\RTOS\FreeRTOS\v8.2.3\tasks.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>3013</YPos2><SelStart2>102545</SelStart2><SelEnd2>102545</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00DC7998><key>iaridepm.enu1</key></Toolbar-00DC7998><Toolbar-15871D60><key>debuggergui.enu1</key></Toolbar-15871D60><Toolbar-15871E28><key>armjlink2.enu1</key></Toolbar-15871E28></Sizes></Row0></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>653</Bottom><Right>531</Right><x>-2</x><y>-2</y><xscreen>407</xscreen><yscreen>302</yscreen><sizeHorzCX>211979</sizeHorzCX><sizeHorzCY>302605</sizeHorzCY><sizeVertCX>277604</sizeVertCX><sizeVertCY>656313</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>300</Bottom><Right>532</Right><x>-2</x><y>-2</y><xscreen>534</xscreen><yscreen>302</yscreen><sizeHorzCX>278125</sizeHorzCX><sizeHorzCY>302605</sizeHorzCY><sizeVertCX>211979</sizeVertCX><sizeVertCY>302605</sizeVertCY></Rect></Wnd0><Wnd2><Rect><Top>0</Top><Left>0</Left><Bottom>0</Bottom><Right>7</Right><x>530</x><y>-2</y><xscreen>725</xscreen><yscreen>302</yscreen><sizeHorzCX>377604</sizeHorzCX><sizeHorzCY>302605</sizeHorzCY><sizeVertCX>211979</sizeVertCX><sizeVertCY>302605</sizeVertCY></Rect></Wnd2><Wnd3><Rect><Top>0</Top><Left>0</Left><Bottom>0</Bottom><Right>0</Right><x>1253</x><y>-2</y><xscreen>669</xscreen><yscreen>302</yscreen><sizeHorzCX>348438</sizeHorzCX><sizeHorzCY>302605</sizeHorzCY><sizeVertCX>211979</sizeVertCX><sizeVertCY>302605</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

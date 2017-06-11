@@ -5,7 +5,7 @@
   please don't modify this file.
 
   Create Date: 2015-06-15
-  Last Update: 2016-12-28
+  Last Update: 2017-03-31
 ========================================*/
 {# System = true #}
 {# Float = (8, 3) #}
@@ -16,38 +16,77 @@ const DISABLE = 0;
 const ENABLE  = 1;
 const PI = 3.14159;
 
-
-//System Clock, link to system layer API
-interface System::Clock
+//System link to system layer API
+interface System
 {
-  default extern
+  property datetime Now   {get; set; index:0; type:'CLOCK';}
+  property date Calendar  {get; set; index:1; type:'CLOCK';}
+  property time Clock     {get; set; index:2; type:'CLOCK';}
+
+  //Show system infomation
+  {# API = 0x0001 #}
+  extern void Infomation();
+
+  //Get input from standard device
+  {# API = 0x0002 #}
+  extern void Input(int Type);
+
+  //Pint text to standard device
+  {# API = 0x0003 #}
+  extern void Print(string Text);
+
+  //Delay with microseconds
+  {# API = 0x0004 #}
+  extern void Delay(uint MSec);
+
+  //Format paramlist with text
+  {# API = 0x0005 #}
+  extern void Format(string Text, string Param); 
+
+  //Pint text to standard device with line end
+  {# API = 0x0006 #}
+  extern void PrintLn(string Text);  
+}
+
+helper int
+{
+  property int Abs
   {
-    type: 'CLOCK';
+    get:'getIntAbs';
   }
-  
-  property Year   { get; set; index: 1 }
-  property Month  { get; set; index: 2 }
-  property Day    { get; set; index: 3 }
-  property Week   { get; set; index: 4 }
-  property Hour   { get; set; index: 5 }
-  property Min    { get; set; index: 6 }
-  property Sec    { get; set; index: 7 }
-  property MSec   { get; set; index: 8 }
-  property Date   { get; set; index: 9 }
-  property Time   { get; set; index: 10}
-};
 
-//Show system infomation
-extern SysInfo()                          : 0x0001;
+  extern string ToString() : 'IntToString';
+}
 
-//Get input from standard device
-extern Input(Type)                        : 0x0002;
+helper date
+{
+  property ushort Year   { get:'getDatetimeYear';  set:'setDatetimeYear'; }
+  property byte   Month  { get:'getDatetimeMonth'; set:'setDatetimeMonth';}
+  property byte   Day    { get:'getDatetimeDay';   set:'setDatetimeDay';  }
+  property byte   Week   { get:'getDatetimeWeek';  set:'setDatetimeWeek'; }
+}
 
-//Pint text to standard device
-extern Print(string Text[255])            : 0x0003;
+helper time
+{  
+  property byte   Hour   { get:'getDatetimeHour';  set:'setDatetimeHour'; }
+  property byte   Min    { get:'getDatetimeMin';   set:'setDatetimeMin';  }
+  property byte   Sec    { get:'getDatetimeSec';   set:'setDatetimeSec';  }
+  property ushort MSec   { get:'getDatetimeMSec';  set:'setDatetimeMSec'; }
+}
 
-//Delay with microseconds
-extern Delay(MSec)                        : 0x0004;
+helper datetime
+{
+  property date Date  { get:'getDatetimeDate'; set:'setDatetimeDate';}
+  property time Time  { get:'getDatetimeTime'; set:'setDatetimeTime';}  
+}
 
-//Format paramlist with text
-extern Format(string Text[255], Param)    : 0x0005;
+enum Weekdays
+{
+  Sunday = 0,           
+  Monday = 1,           
+  Tuesday = 2,          
+  Wednesday = 3,        
+  Thursday = 4,         
+  Friday = 5,           
+  Saturday = 6          
+}

@@ -1,0 +1,14 @@
+/*========================================
+  This is a simple DEMO program, it send 
+  a greeting of "Hello World" to 
+  the computer.
+  
+  这是一个最简单的DEMO程序，它向你发送一个
+  “Hello World” 的问候。
+========================================*/
+import system;
+
+main
+{
+  Print('Hello World');
+}

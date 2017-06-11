@@ -11,15 +11,6 @@
 
 #include "stm32ext.h"
 
-//USB D-
-#define USB_DM     GPIO_PA11
-   
-//USB D+
-#define USB_DP     GPIO_PA12
-
-//USB D+ иою╜
-#define USB_PULL   GPIO_PC13
-
 #define USBD_CFG_MAX_NUM           1
 #define USBD_ITF_MAX_NUM           1
 

@@ -12,11 +12,23 @@
 
 #include "CrabBaseType.h"
 #include "CrabStream.h"
-#include "CrabPlatform.h"
+#include "CrabUtility.h"
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
+
+#define CRAB_APP_OFF              0
+#define CRAB_APP_STOPPING         1
+#define CRAB_APP_LOADROM          2
+#define CRAB_APP_RESET            3
+#define CRAB_APP_ERROR            4
+#define CRAB_APP_STANDBY          5
+#define CRAB_APP_PAUSE            6
+#define CRAB_APP_CONTINUE         7
+#define CRAB_APP_STEP             8
+#define CRAB_APP_RUNNING          9
+#define CRAB_APP_EXCEPTION        0xFF
 
 //建立环境
 CrabBool CrabExecute_Create(PCrabConfig Config);
@@ -38,6 +50,15 @@ CrabBool CrabExecute_Stop();
 
 //获取状态
 CrabBool CrabExecute_Actived();
+
+//读取当前指令地址
+CrabUint CrabExecute_GetCmdAddr();
+
+//读取当前文件流位置
+CrabUint CrabExecute_GetAddr();
+
+//设置文件流位置
+CrabBool CrabExecute_SetAddr(CrabUint Addr);
 
 //预处理当前指令
 CrabBool CrabExecute_PrepareNextLine();

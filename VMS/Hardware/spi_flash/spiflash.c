@@ -232,18 +232,27 @@ void sFLASH_ByteWrite(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWr
 
 
 /*******************************************************************************
-* Function    : sFLASH_PageWrite
+* Function    : sFLASH_PageWriteS25
 * Caption     : .
 *  @Param     : 1.pBuffer - 
 *  @Param     : 2.WriteAddr - 
 *  @Param     : 3.NumByteToWrite - 
 * Description : .
 *******************************************************************************/
-void sFLASH_PageWrite(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
+void sFLASH_PageWriteS25(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
 {
+  uint8_t Status;
+  
   /*!< Enable the write access to the FLASH */
   sFLASH_WriteCmd(sFLASH_CMD_WREN);
   
+  Status = sFLASH_ReadStatus();
+  
+  if ((Status & 0x02) != 0x02)
+  {
+    return;
+  }
+    
   /* Enable SO as RD/BY */
   //sFLASH_WriteCmd(sFLASH_CMD_EBSY);
 
@@ -287,6 +296,52 @@ void sFLASH_PageWrite(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWr
 
   /*!< Wait the end of Flash writing */
   //sFLASH_WaitForWriteEnd();
+}
+
+/*******************************************************************************
+* Function    : sFLASH_PageWriteW25
+* Caption     : .
+*  @Param     : 1.pBuffer - 
+*  @Param     : 2.WriteAddr - 
+*  @Param     : 3.NumByteToWrite - 
+* Description : .
+*******************************************************************************/
+void sFLASH_PageWriteW25(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
+{
+  uint8_t Status;
+  
+  /*!< Enable the write access to the FLASH */
+  sFLASH_WriteCmd(sFLASH_CMD_WREN);
+  
+  Status = sFLASH_ReadStatus();
+  
+  if ((Status & 0x02) != 0x02)
+  {
+    return;
+  }
+
+  /*!< Select the FLASH: Chip Select low */
+  sFLASH_CS_LOW();
+  
+  sFLASH_SendByte(sFLASH_CMD_WRITE); 
+  sFLASH_SendAddr(WriteAddr);
+  
+  while (NumByteToWrite)
+  {    
+    /*!< Send the current byte */
+    sFLASH_SendByte(*pBuffer);
+    
+    pBuffer++;
+    NumByteToWrite--;
+  }
+  
+  /*!< Deselect the FLASH: Chip Select high */
+  sFLASH_CS_HIGH();
+
+  /*!< Wait the end of Flash writing */
+  sFLASH_WaitForWriteEnd();
+  
+  sFLASH_WriteCmd(sFLASH_CMD_WRDI);
 }
 
 
@@ -437,6 +492,37 @@ uint32_t sFLASH_ReadID(void)
 }
 
 /*******************************************************************************
+* Function    : sFLASH_ReadUID
+* Caption     : .
+*  @Param     : 1 - 
+* Description : .
+*******************************************************************************/
+void sFLASH_ReadUID(uint8_t* pBuffer)
+{
+  uint16_t NumByteToRead = 8;
+  
+    /*!< Select the FLASH: Chip Select low */
+  sFLASH_CS_LOW();
+
+  /*!< Send "Read from Memory " instruction */
+  sFLASH_SendByte(sFLASH_CMD_RDUID);
+
+  sFLASH_SendAddr(0);
+
+  while (NumByteToRead) /*!< while there is data to be read */
+  {
+    /*!< Read a byte from the FLASH */
+    *pBuffer = sFLASH_SendByte(sFLASH_DUMMY_BYTE);
+    /*!< Point to the next location where the byte read will be saved */
+    pBuffer++;
+    NumByteToRead--;
+  }
+
+  /*!< Deselect the FLASH: Chip Select high */
+  sFLASH_CS_HIGH();
+}
+
+/*******************************************************************************
 * Function    : sFLASH_ReadStatus
 * Caption     : .
 *  @Param     : 1 - 
@@ -452,6 +538,32 @@ uint8_t sFLASH_ReadStatus(void)
 
   /*!< Send "RDSR " instruction */
   sFLASH_SendByte(sFLASH_CMD_RDSR);
+
+  /*!< Read a byte from the FLASH */
+  Result = sFLASH_SendByte(sFLASH_DUMMY_BYTE);
+
+  /*!< Deselect the FLASH: Chip Select high */
+  sFLASH_CS_HIGH();
+  
+  return Result;
+}
+
+/*******************************************************************************
+* Function    : sFLASH_ReadExtStatus
+* Caption     : .
+*  @Param     : 1 - 
+* Return      : uint8_t
+* Description : .
+*******************************************************************************/
+uint8_t sFLASH_ReadExtStatus(void)
+{
+  uint8_t Result;
+  
+  /*!< Select the FLASH: Chip Select low */
+  sFLASH_CS_LOW();
+
+  /*!< Send "RDSR " instruction */
+  sFLASH_SendByte(sFLASH_CMD_RDSR2);
 
   /*!< Read a byte from the FLASH */
   Result = sFLASH_SendByte(sFLASH_DUMMY_BYTE);

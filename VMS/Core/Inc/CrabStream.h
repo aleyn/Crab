@@ -17,8 +17,55 @@
 extern "C" {
 #endif
 
-#define CrabStream_Error                0xFFFFFFFF
-#define CrabStream_InvaildDevice        0
+#define CrabStream_Success               0
+#define CrabStream_Error                 0xFFFFFFFF
+#define CrabStream_InvaildDevice        -1
+#define CrabStream_InvaildApiFunc       -2
+#define CrabStream_InvaildAddr          -3
+#define CrabStream_ReadFaild            -4
+#define CrabStream_WriteFaild           -5
+
+#define CrabStream_ReadTiny(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_TINY)
+#define CrabStream_ReadShort(a, b)          CrabStream_ReadType(a, &b, CRABTYPE_SHORT)
+#define CrabStream_ReadInt(a, b)            CrabStream_ReadType(a, &b, CRABTYPE_INT)
+#define CrabStream_ReadLong(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_LONG)
+
+#define CrabStream_ReadByte(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_BYTE)
+#define CrabStream_ReadUShort(a, b)         CrabStream_ReadType(a, &b, CRABTYPE_USHORT)
+#define CrabStream_ReadUint(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_UINT)
+#define CrabStream_ReadULong(a, b)          CrabStream_ReadType(a, &b, CRABTYPE_ULONG)
+
+#define CrabStream_ReadBool(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_BOOL)
+#define CrabStream_ReadChar(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_CHAR)
+//#define CrabStream_ReadString(a, b)         CrabStream_ReadType(a, &b, CRABTYPE_STRING)
+
+#define CrabStream_ReadFloat(a, b)          CrabStream_ReadType(a, &b, CRABTYPE_FLOAT)
+#define CrabStream_ReadDouble(a, b)         CrabStream_ReadType(a, &b, CRABTYPE_DOUBLE)
+
+#define CrabStream_ReadDate(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_DATE)
+#define CrabStream_ReadTime(a, b)           CrabStream_ReadType(a, &b, CRABTYPE_TIME)
+#define CrabStream_ReadDatetime(a, b)       CrabStream_ReadType(a, &b, CRABTYPE_DATETIME)
+
+#define CrabStream_WriteTiny(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_TINY)
+#define CrabStream_WriteShort(a, b)         CrabStream_WriteType(a, &b, CRABTYPE_SHORT)
+#define CrabStream_WriteInt(a, b)           CrabStream_WriteType(a, &b, CRABTYPE_INT)
+#define CrabStream_WriteLong(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_LONG)
+
+#define CrabStream_WriteByte(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_BYTE)
+#define CrabStream_WriteUShort(a, b)        CrabStream_WriteType(a, &b, CRABTYPE_USHORT)
+#define CrabStream_WriteUint(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_UINT)
+#define CrabStream_WriteULong(a, b)         CrabStream_WriteType(a, &b, CRABTYPE_ULONG)
+
+#define CrabStream_WriteBool(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_BOOL)
+#define CrabStream_WriteChar(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_CHAR)
+//#define CrabStream_WriteString(a, b)        CrabStream_WriteType(a, &b, CRABTYPE_STRING)
+
+#define CrabStream_WriteFloat(a, b)         CrabStream_WriteType(a, &b, CRABTYPE_FLOAT)
+#define CrabStream_WriteDouble(a, b)        CrabStream_WriteType(a, &b, CRABTYPE_DOUBLE)
+
+#define CrabStream_WriteDate(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_DATE)
+#define CrabStream_WriteTime(a, b)          CrabStream_WriteType(a, &b, CRABTYPE_TIME)
+#define CrabStream_WriteDatetime(a, b)      CrabStream_WriteType(a, &b, CRABTYPE_DATETIME)
 
 typedef enum
 {
@@ -50,6 +97,7 @@ typedef CrabUint(*TCrabStream_Free)     (TCrabStreamDevice Device);
 typedef struct
 {
   TCrabStreamDevice    Device;        //设备信息
+  CrabInt              ErrCode;       //最后的错误信息
 
   TCrabStream_GetSize  GetSize;       //获取长度
   TCrabStream_SetSize  SetSize;       //设置长度
@@ -63,6 +111,9 @@ typedef struct
 
 //初始化流结构
 CrabVoid CrabStream_Init(PCrabStream Stream);
+
+//检查流结构
+CrabUint CrabStream_Check(PCrabStream Stream, CrabUint ApiAddr);
 
 //释放流
 CrabUint CrabStream_Free(PCrabStream Stream);
@@ -78,7 +129,7 @@ CrabUint CrabStream_Position(PCrabStream Stream);
 
 //设置新的流位置
 CrabUint CrabStream_Seek(PCrabStream Stream, CrabUint Offset, CrabInt Origin);
-#define CrabStream_SeekAddr(Stream, Addr)  CrabStream_Seek(Stream, Addr, csoBeginning);
+#define CrabStream_SeekAddr(Stream, Addr)  CrabStream_Seek(Stream, Addr, csoBeginning)
 
 //读取流数据
 CrabUint CrabStream_Read(PCrabStream Stream, CrabPoint Buffer, CrabUint Count);
@@ -86,44 +137,20 @@ CrabUint CrabStream_Read(PCrabStream Stream, CrabPoint Buffer, CrabUint Count);
 //写入流数据
 CrabUint CrabStream_Write(PCrabStream Stream, CrabPoint Buffer, CrabUint Count);
 
+//读取流数据
+CrabUint CrabStream_ReadType(PCrabStream Stream, CrabPoint Buffer, CrabByte BufType);
+
+//写入流数据
+CrabUint CrabStream_WriteType(PCrabStream Stream, CrabPoint Buffer, CrabByte BufType);
+
 //判断流是否已经结束
 CrabBool CrabStream_Eof(PCrabStream Stream);
 
-//从流中读取一个字节
-CrabByte CrabStream_ReadByte(PCrabStream Stream);
-
-//写一个字节到流中
-CrabVoid CrabStream_WriteByte(PCrabStream Stream, CrabByte Value);
-
-//从流中读取一个字
-CrabWord CrabStream_ReadWord(PCrabStream Stream);
-
-//写一个字到流中
-CrabVoid CrabStream_WriteWord(PCrabStream Stream, CrabWord Value);
-
-//从流中读取一个整型
-CrabInt CrabStream_ReadInteger(PCrabStream Stream);
-
-//写一个整形到流中
-CrabVoid CrabStream_WriteInteger(PCrabStream Stream, CrabInt Value);
-
-//从流中读取一个布尔型
-CrabBool CrabStream_ReadBoolean(PCrabStream Stream);
-
-//写一个布尔型到流中
-CrabVoid CrabStream_WriteBoolean(PCrabStream Stream, CrabBool Value);
-
-//从流中读取一个浮点型
-CrabFloat CrabStream_ReadFloat(PCrabStream Stream);
-
-//写一个浮点型到流中
-CrabVoid CrabStream_WriteFloat(PCrabStream Stream, CrabFloat Value);
-
 //从流中读取一个字符串型
-CrabString CrabStream_ReadString(PCrabStream Stream, CrabString Result);
+CrabUint CrabStream_ReadString(PCrabStream Stream, CrabString Result);
 
 //写一个字符串到流中
-CrabVoid CrabStream_WriteString(PCrabStream Stream, CrabString Value, CrabByte MaxLength);
+CrabUint CrabStream_WriteString(PCrabStream Stream, CrabString Value, CrabByte MaxLength);
 
 #ifdef  __cplusplus
 }

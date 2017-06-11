@@ -22,8 +22,9 @@
 #define MASTER_Address            0xC0
 #define EEPROM_Speed              100000
 #define EEPROM_PageSize           8
-#define EEPROM_DefAddress         0xA0 /* Device Address */ 
-#define EEPROM_AddrSize           2
+#define EEPROM_DefAddress         0xA0 /* Device Address */
+#define EEPROM_BlockMode          1
+#define EEPROM_AddrSize           1
 #define EEPROM_CheckTime          100000
 #define EEPROM_Timeout            0
 #define EEPROM_Success            0xFFFFFFFF
@@ -35,7 +36,7 @@ uint32_t EEPROM_ByteWrite(uint8_t  Data, uint16_t WriteAddr);
 uint32_t EEPROM_PageWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint8_t NumByteToWrite);
 uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumByteToWrite);
 uint32_t EEPROM_BufferRead(uint8_t* pBuffer, uint16_t ReadAddr, uint16_t NumByteToRead);
-uint32_t EEPROM_WaitEepromStandbyState(void);
+uint32_t EEPROM_WaitEepromStandbyState(uint16_t MemoryAddr);
 
 #ifdef __cplusplus
 }

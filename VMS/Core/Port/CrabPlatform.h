@@ -16,41 +16,45 @@
 extern "C" {
 #endif
 
-#define CRAB_APP_OFF              0
-#define CRAB_APP_STOPPING         1
-#define CRAB_APP_LOADROM          2
-#define CRAB_APP_RESET            3
-#define CRAB_APP_ERROR            4
-#define CRAB_APP_STANDBY          5
-#define CRAB_APP_PAUSE            6
-#define CRAB_APP_CONTINUE         7
-#define CRAB_APP_STEP             8
-#define CRAB_APP_RUNNING          9
-#define CRAB_APP_EXCEPTION        0xFF
+#ifdef  __ICCARM__  
+#define __flash _Pragma("location=\".rodata\"")
+#define __cache _Pragma("location=\".ccmram\"")
+#define __ram   _Pragma("location=\".data\"")
+#else
+#define __flash
+#define __cache
+#define __ram
+#endif
 
 #ifdef __BORLANDC__
-  #define CrabMemAlloc(a,b)   a = malloc(b)   //申请内存
+  #define CrabMemAlloc(a, b)  (a)malloc(b)    //申请内存
   #define CrabMemFree(a)      free(a)         //释放内存
   #define CrabMemFZero(a,b)   memset(a,0,b)   //内存清零
   #define CrabMemFill(a,b,c)  memset(a,c,b)   //内存填充
   #define CrabMemCopy(a,b,c)  memcpy(a,b,c)   //内存复制
 #else
-  #define CrabMemAlloc(a,b)   a = malloc(b)   //申请内存
+  #define CrabMemAlloc(a, b)  (a)malloc(b)    //申请内存
   #define CrabMemFree(a)      free(a)         //释放内存
   #define CrabMemFZero(a,b)   memset(a,0,b)   //内存清零
   #define CrabMemFill(a,b,c)  memset(a,c,b)   //内存填充
   #define CrabMemCopy(a,b,c)  memcpy(a,b,c)   //内存复制, 在IAR中，调用此函数需要加 #include "string.h"
+#endif
+
+#ifdef __BORLANDC__
+  #define strcasecmp          stricmp
+  #define strncasecmp         strnicmp
+  #define StrToInt            atoi            //字符串转为整型
+  #define StrToFloat          atof            //字符串转为浮点型
+  #define IntToStr            itoa            //整形转为字符串
+  #define FloatToStr          ftoa            //浮点型转为字符串
+#else
+  #define strcasecmp          stricmp
+  #define strncasecmp         strnicmp
+  #define StrToInt            atoi            //字符串转为整型
+  #define StrToFloat          atof            //字符串转为浮点型
+  #define IntToStr            itoa            //整形转为字符串
+  #define FloatToStr          ftoa            //浮点型转为字符串
 #endif  
-  
-#pragma pack(1)
-typedef struct
-{
-  CrabPoint     Memory;         //用户内存地址
-  CrabUint      MemorySize;     //用户内存大小
-  CrabPoint     Cache;          //指令缓冲区
-  CrabUint      CacheSize;      //指令缓冲区大小
-  CrabUint      FifoCount;      //事件FIFO个数
-} TCrabConfig, *PCrabConfig;
 
 //注册API函数
 void CrabRegisterApi();
@@ -62,7 +66,7 @@ crabapi CrabEventIntr (CrabBool State);
 crabapi CrabInput (CrabUint Type, CrabAnsi Buffer, PCrabUint Length);
 
 //标准输出API
-crabapi CrabPrint (CrabAnsi Text, CrabUint Length);
+crabapi CrabPrint (CrabAnsi Text, CrabUint Length, CrabBool LineEnd);
 
 //延时API，毫秒
 crabapi CrabDelay (CrabUint MSec);  

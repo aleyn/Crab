@@ -120,6 +120,9 @@ uint32_t EEPROM_CheckEvent(uint32_t I2C_EVENT)
   return Timeout;
 }
 
+
+
+
 /*******************************************************************************
 * Function    : EEPROM_Start
 * Caption     : 发起I2C起始时序
@@ -128,7 +131,7 @@ uint32_t EEPROM_CheckEvent(uint32_t I2C_EVENT)
 * Description : .
 *******************************************************************************/
 uint32_t EEPROM_Start(uint16_t MemoryAddr)
-{
+{  
   uint32_t Result = EEPROM_Success;
   
   do
@@ -149,8 +152,18 @@ uint32_t EEPROM_Start(uint16_t MemoryAddr)
       break;
     }
 
-    /* Send EEPROM address for write */
-    I2C_Send7bitAddress(EEPROM_I2C, EEPROM_Address, I2C_Direction_Transmitter);
+    if (EEPROM_BlockMode)
+    {
+      uint8_t  Addr = EEPROM_Address | ((MemoryAddr >> 7) & 0x000E);
+            
+      /* Send EEPROM address for write */
+      I2C_Send7bitAddress(EEPROM_I2C, Addr, I2C_Direction_Transmitter);
+    }
+    else
+    {
+      /* Send EEPROM address for write */
+      I2C_Send7bitAddress(EEPROM_I2C, EEPROM_Address, I2C_Direction_Transmitter);
+    }
     
     /* Test on EV6 and clear it */
     if (!EEPROM_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
@@ -171,7 +184,7 @@ uint32_t EEPROM_Start(uint16_t MemoryAddr)
         break;
       }
     }
-    
+
     /* Send the EEPROM's internal address to write to */
     I2C_SendData(EEPROM_I2C, MemoryAddr & 0x00FF);
     
@@ -214,7 +227,7 @@ uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumBy
       Result = EEPROM_PageWrite(pBuffer, WriteAddr, NumOfSingle);
       if (Result == EEPROM_Success)
       {
-        Result = EEPROM_WaitEepromStandbyState();
+        Result = EEPROM_WaitEepromStandbyState(WriteAddr);
       }
     }
     /* If NumByteToWrite > EEPROM_PageSize */
@@ -225,7 +238,7 @@ uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumBy
         Result = EEPROM_PageWrite(pBuffer, WriteAddr, EEPROM_PageSize); 
     	  if (Result == EEPROM_Success)
         {
-          Result = EEPROM_WaitEepromStandbyState();
+          Result = EEPROM_WaitEepromStandbyState(WriteAddr);
           WriteAddr +=  EEPROM_PageSize;
           pBuffer += EEPROM_PageSize;
         }
@@ -236,7 +249,7 @@ uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumBy
         Result = EEPROM_PageWrite(pBuffer, WriteAddr, NumOfSingle);
         if (Result == EEPROM_Success)
         {
-          Result = EEPROM_WaitEepromStandbyState();
+          Result = EEPROM_WaitEepromStandbyState(WriteAddr);
         }
       }
     }
@@ -250,7 +263,7 @@ uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumBy
       Result = EEPROM_PageWrite(pBuffer, WriteAddr, NumOfSingle);
       if (Result == EEPROM_Success)
       {
-        Result = EEPROM_WaitEepromStandbyState();
+        Result = EEPROM_WaitEepromStandbyState(WriteAddr);
       }
     }
     /* If NumByteToWrite > EEPROM_PageSize */
@@ -265,7 +278,7 @@ uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumBy
         Result = EEPROM_PageWrite(pBuffer, WriteAddr, count);
         if (Result == EEPROM_Success)
         {
-          Result = EEPROM_WaitEepromStandbyState();
+          Result = EEPROM_WaitEepromStandbyState(WriteAddr);
           WriteAddr += count;
           pBuffer += count;
         }
@@ -276,7 +289,7 @@ uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumBy
         Result = EEPROM_PageWrite(pBuffer, WriteAddr, EEPROM_PageSize);
         if (Result == EEPROM_Success)
         {
-          Result = EEPROM_WaitEepromStandbyState();
+          Result = EEPROM_WaitEepromStandbyState(WriteAddr);
           WriteAddr +=  EEPROM_PageSize;
           pBuffer += EEPROM_PageSize;  
         }
@@ -287,7 +300,7 @@ uint32_t EEPROM_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumBy
         Result = EEPROM_PageWrite(pBuffer, WriteAddr, NumOfSingle); 
         if (Result == EEPROM_Success)
         {
-          Result = EEPROM_WaitEepromStandbyState();
+          Result = EEPROM_WaitEepromStandbyState(WriteAddr);
         }
       }
     }
@@ -426,9 +439,19 @@ uint32_t EEPROM_BufferRead(uint8_t* pBuffer, uint16_t ReadAddr, uint16_t NumByte
       break;
     }
     
-    /* Send EEPROM address for read */
-    I2C_Send7bitAddress(EEPROM_I2C, EEPROM_Address, I2C_Direction_Receiver);
-    
+    if (EEPROM_BlockMode)
+    {
+      uint8_t  Addr = EEPROM_Address | ((ReadAddr >> 7) & 0x000E);
+            
+      /* Send EEPROM address for write */
+      I2C_Send7bitAddress(EEPROM_I2C, Addr, I2C_Direction_Receiver);
+    }
+    else
+    {
+      /* Send EEPROM address for write */
+      I2C_Send7bitAddress(EEPROM_I2C, EEPROM_Address, I2C_Direction_Receiver);
+    }
+        
     /* Test on EV6 and clear it */
     if (!EEPROM_CheckEvent(I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED))
     {
@@ -490,7 +513,7 @@ uint32_t EEPROM_BufferRead(uint8_t* pBuffer, uint16_t ReadAddr, uint16_t NumByte
 * Return      : uint32_t
 * Description : .
 *******************************************************************************/
-uint32_t EEPROM_WaitEepromStandbyState(void)
+uint32_t EEPROM_WaitEepromStandbyState(uint16_t MemoryAddr)
 {
   __IO uint16_t SR1_Tmp = 0;
   uint32_t Timeout = EEPROM_CheckTime;
@@ -501,8 +524,19 @@ uint32_t EEPROM_WaitEepromStandbyState(void)
     I2C_GenerateSTART(EEPROM_I2C, ENABLE);
     /* Read I2C1 SR1 register */
     SR1_Tmp = I2C_ReadRegister(EEPROM_I2C, I2C_Register_SR1);
-    /* Send EEPROM address for write */
-    I2C_Send7bitAddress(EEPROM_I2C, EEPROM_Address, I2C_Direction_Transmitter);
+    
+    if (EEPROM_BlockMode)
+    {
+      uint8_t  Addr = EEPROM_Address | ((MemoryAddr >> 7) & 0x000E);
+            
+      /* Send EEPROM address for write */
+      I2C_Send7bitAddress(EEPROM_I2C, Addr, I2C_Direction_Transmitter);
+    }
+    else
+    {
+      /* Send EEPROM address for write */
+      I2C_Send7bitAddress(EEPROM_I2C, EEPROM_Address, I2C_Direction_Transmitter);
+    }
     
     Timeout--;
     if (!Timeout)

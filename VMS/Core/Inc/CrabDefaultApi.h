@@ -20,15 +20,6 @@ extern "C" {
 //×¢²áAPIº¯Êý
 void CrabRegisterDefaultApi();
 
-crabapi CrabApiSystemInfo ();
-crabapi CrabApiInput ();
-crabapi CrabApiPrint ();
-crabapi CrabApiDelayMS ();
-crabapi CrabApiFormat ();
-
-crabapi CrabApiFloatToString ();
-crabapi CrabApiHexToString ();
-
 #ifdef  __cplusplus
 }
 #endif
