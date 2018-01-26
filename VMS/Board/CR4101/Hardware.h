@@ -21,37 +21,56 @@
 #include "usbd_desc.h"
 #include "usbd_gap.h"
 #include "nRF24L01.h"
+#include "PulseTimer.h"
+#include "PulseWave.h"
 
+//核心系统IO
 #define SYS_LED               GPIO_PB10
 #define SYS_ESC               GPIO_PB2
 
+//硬件驱动调试
+#ifdef  CRABVMS_DEBUG
+#define DEBUG_KEY             GPIO_PB8
+#define DEBUG_LED             GPIO_PA6
+#endif   
+   
+//USB
 #define USB_DM                GPIO_PA11
 #define USB_DP                GPIO_PA12
 #define USB_PULL              GPIO_PC13
 
+//秒信号定时器  TIM6
+#define SECOND_TIM            TIM10
+#define SECOND_TIM_IDX        10
+//秒信号定时器校准值
+#define SECOND_CALI           10
+//秒信号中断函数
+#define SECOND_IRQHandler     TIM1_UP_TIM10_IRQHandler
+#define SECOND_IRQn           TIM1_UP_TIM10_IRQn
+   
 #define BEP_IO                GPIO_PA2
 #define BEP_TIM               9
 #define BEP_CHANNEL           1
+#define BEP_AF                GPIO_AF_TIM9
    
 #define LED_1                 GPIO_PA7
 #define LED_2                 GPIO_PA6
 
+#define MOTOR_COUNT           2
+
 #define MOTO1_TIM             5
+#define MOTO1_AF              GPIO_AF_TIM5
 #define MOTO1_A_IO            GPIO_PA0
 #define MOTO1_A_CH            1
 #define MOTO1_B_IO            GPIO_PA1
 #define MOTO1_B_CH            2
 
 #define MOTO2_TIM             2
+#define MOTO2_AF              GPIO_AF_TIM2
 #define MOTO2_A_IO            GPIO_PA3
 #define MOTO2_A_CH            4
 #define MOTO2_B_IO            GPIO_PA5
-#define MOTO2_B_CH            1
-
-#define MOTO1_A               GPIO_PA0
-#define MOTO1_B               GPIO_PA1
-#define MOTO2_A               GPIO_PA3
-#define MOTO2_B               GPIO_PA5   
+#define MOTO2_B_CH            1  
 
 #define KEY_SCAN              1
 #define KEY_BUFFER_MODE       0
@@ -64,9 +83,9 @@
 #define ADC_CH2               ADC_Channel_9
 
 #define ADC_SimpleTime        ADC_SampleTime_56Cycles  
-
+#define ADC_REF               406
+  
 #define PRINTF_COM            USART1
-#define USER_COM              USART1
 #define PROTOCOL_COM          USART1
 #define DEVICE_COM_BR         115200
 

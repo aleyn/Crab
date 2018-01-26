@@ -46,7 +46,8 @@ void CrabEventTask()
       CrabFifo_PushEvent(KEY_PRESS);
     #endif
     }
-    
+  
+  #if (nRF24_ACTIVE == 1)
     if (nRF24_IRQ_Active())
     {
       //GPIO_SetBit(USER_LED, LED_ON);
@@ -76,12 +77,24 @@ void CrabEventTask()
       }
       
       nRF24_FlashFifo(1, 1);
-    }    
+    }
+    #endif
     
     CrabDelay(10);
   }
 }
   
-
+/*******************************************************************************
+* Function    : CrabAlarmClose
+* Caption     : 事件压栈
+*  @Param     : 1.Event - 事件ID
+* Description : .
+*******************************************************************************/
+void CrabEventPush(CrabUint Event)
+{
+  CrabTaskMutexEnter(CRAB_TASK_MUTEX_EVENT);
+  CrabFifo_PushEvent(Event);
+  CrabTaskMutexExit(CRAB_TASK_MUTEX_EVENT);
+}
 
 // END OF FILE

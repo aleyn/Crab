@@ -1,0 +1,58 @@
+/*=======================================================
+    Crab Board Demo
+    时钟与闹钟演示
+=======================================================*/
+import CR4101;
+
+//闹钟呼声间隔
+const ALARM_BEEP = 500;
+
+//闹钟时间设置
+time[2]   AlarmTime;
+
+//秒信号事件
+event OnSecond: SECOND_EVENT
+{ 
+  PrintLn("Time: " # Clock.Now);
+}
+
+//闹钟事件 第1组
+event OnAlarm1: ALARM_EVENT + 1
+{
+  PrintLn("Alarm 1: " # Clock.Now);
+  Board.Beep(ALARM_BEEP, 10);
+}
+
+//闹钟事件 第2组
+event OnAlarm2: ALARM_EVENT + 2
+{
+  PrintLn("Alarm 2: " # Clock.Now);
+  Board.Beep(ALARM_BEEP, 10);
+}
+
+main
+{
+  PrintLn('=== Crab Board Clock & Alarm Demo ===');
+
+  //设置两组闹钟
+  AlarmTime[0] = $'06:30:00';
+  AlarmTime[1] = $'22:00:00';  
+
+  Alarm[1].UpdateWithTime(AlarmTime[0], true);
+  Alarm[2].UpdateWithTime(AlarmTime[1], true);
+
+  //开启秒信号事件
+  Clock.SecondEvent(true);
+
+  //打开事件驱动机制
+  OpenEvent();  
+
+  repeat
+  {
+
+  } until error;
+
+  //关闭事件驱动机制
+  CloseEvent();
+}
+

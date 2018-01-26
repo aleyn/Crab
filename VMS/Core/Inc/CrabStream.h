@@ -94,6 +94,7 @@ typedef CrabBool(*TCrabStream_Eof)      (TCrabStreamDevice Device);
 typedef CrabUint(*TCrabStream_Free)     (TCrabStreamDevice Device);
 
 //内存流结构函数
+#pragma pack(1)
 typedef struct
 {
   TCrabStreamDevice    Device;        //设备信息
@@ -108,6 +109,7 @@ typedef struct
   TCrabStream_Eof      Eof;           //是否结束位置
   TCrabStream_Free     Free;          //释放流
 } TCrabStream, *PCrabStream;
+#pragma pack()
 
 //初始化流结构
 CrabVoid CrabStream_Init(PCrabStream Stream);

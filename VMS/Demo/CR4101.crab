@@ -14,6 +14,7 @@ import System;
 //LED
 const  LED_OFF   = 0;  //LED关闭
 const  LED_ON    = 1;  //LED点亮
+const  LED_GREEN = 1;  //LED点亮：绿色
 const  LED_BLUE  = 1;  //LED点亮：蓝色
 const  LED_RED   = 2;  //LED点亮：红色
 
@@ -46,17 +47,20 @@ interface Board
   //其它输入
   property ushort Input { get : 'getInput';}
 
-  //LED1显示
-  property byte LED1    { set : 'setLED'; index:1;}
+  //LED[1,2]显示
+  property byte[] LED    { set : 'setLED';}
 
-  //LED2显示
-  property byte LED2    { set : 'setLED'; index:2;}
+  //通用IO[1..10]控制
+  property byte[] GPIO {get:'getGPIO'; set:'setGPIO';}
+
+  //模数[1,2]转换
+  property uint[] ADC {get:'getADC';} 
 
   //旋扭输入 0 - 100
   property ushort  TWIST  { get: 'getSensor'; index:2;}
 
   //光照传感器 0 -100
-  property ushort  LIGHT  { get: 'getSensor'; index:1;}  
+  property ushort  LIGHT  { get: 'getSensor'; index:1;}
 
   //设置定时器
   //Timer:     索引号
@@ -66,72 +70,21 @@ interface Board
 
   //蜂鸣器开关
   //Width:鸣叫时间间隔，单位毫秒，以50毫秒为一个阶梯
-  //Count:鸣叫次数  
-  extern void Beep(byte Width, byte Count);
-}
-
-//通用IO控制
-interface Board::GPIO
-{
-  default extern {get:'getGPIO'; set:'setGPIO';}
-
-  property byte A1 {get; set; index: 1;}
-  property byte A2 {get; set; index: 2;}
-  property byte B1 {get; set; index: 3;}
-  property byte B2 {get; set; index: 4;}
-  property byte C1 {get; set; index: 5;}
-  property byte C2 {get; set; index: 6;}
-  property byte C3 {get; set; index: 7;}
-  property byte C4 {get; set; index: 8;}
-  property byte D1 {get; set; index: 9;}
-  property byte D2 {get; set; index: 10;}
-}
-
-interface Board::ADC
-{
-  default extern {get:'getADC';}
-
-  property default uint Config { set : 'setADC'; }
-  property uint A1 {get; index: 1;}
-  property uint A2 {get; index: 2;}
-  property uint B1 {get; index: 3;}
-  property uint B2 {get; index: 4;}
-  property uint C1 {get; index: 5;}
-  property uint C2 {get; index: 6;}
-  property uint C3 {get; index: 7;}
-  property uint C4 {get; index: 8;}
-  property uint D1 {get; index: 9;}
-  property uint D2 {get; index: 10;}
+  //Count:鸣叫次数
+  extern void Beep(ushort Width, byte Count); 
 }
 
 //马达1 接口定义
-interface Motor1
+interface Motor
 {
-  //开关: true = 打开, false = 关闭
-  property boolean Active {get : 'getMotorActive'; set : 'setMotorActive'; index: 0x10;}
+  
+  default
+  {
+    array : true;
+  }
 
-  //速度: 0 - 100
-  property uint Speed {get : 'getMotorSpeed'; set : 'setMotorSpeed'; index: 0x11;}
-
-  //频率: 0 - 100000
-  property uint Frequ {get : 'getMotorFrequ'; set : 'setMotorFrequ'; index: 0x12;}
-
-  //极性: 0 = 正向, 1 = 反向
-  property byte Polar {get : 'getMotorPolar'; set : 'setMotorPolar'; index: 0x13;}
-}
-
-//马达2 接口定义
-interface Motor2
-{
-  //开关: true = 打开, false = 关闭
-  property boolean Active {get : 'getMotorActive'; set : 'setMotorActive'; index: 0x20;}
-
-  //速度: 0 - 100
-  property uint Speed {get : 'getMotorSpeed'; set : 'setMotorSpeed'; index: 0x21;}
-
-  //频率: 0 - 100000
-  property uint Frequ {get : 'getMotorFrequ'; set : 'setMotorFrequ'; index: 0x22;}
-
-  //极性: 0 = 正向, 1 = 反向
-  property byte Polar {get : 'getMotorPolar'; set : 'setMotorPolar'; index: 0x23;}
+  //速度:  0 停止
+  //正向:  1 --  100
+  //反向: -1 -- -100
+  property int Speed {get : 'getMotor'; set : 'setMotor';}
 }

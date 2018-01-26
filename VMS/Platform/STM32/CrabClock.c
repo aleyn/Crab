@@ -8,12 +8,16 @@
 ********************************************************************************/
 #include "CrabVMS.h"
 
-RTC_TimeTypeDef RTC_TimeStructure;
-RTC_DateTypeDef RTC_DateStructure;
-
 crabapi CrabGetClock();
 crabapi CrabSetClock();
 
+crabapi CrabApiSecondEvent();         //extern void SecondEvent(boolean Status) : 'SecondEvent';
+crabapi CrabApiAlarmClose();          //extern void Close() : 'AlarmClose';
+crabapi CrabApiAlarmWithTime();       //extern void UpdateWithTime(time Time, boolean EveryDay) : 'AlarmWithTime';
+crabapi CrabApiAlarmWithWeek();       //extern void UpdateWithWeek(int Weekday, time Time, boolean EveryWeek) : 'AlarmWithWeek';
+crabapi CrabApiAlarmWithDay();        //extern void UpdateWithDay(int Day, time Time, boolean EveryMonth) : 'AlarmWithDay';
+crabapi CrabApiAlarmWithDate();       //extern void UpdateWithDate(date Date, boolean EveryYear) : 'AlarmWithDate';
+    
 /*******************************************************************************
 * Function    : CrabRegisterClockApi
 * Caption     : 注册时钟API函数 
@@ -23,6 +27,14 @@ void CrabRegisterClockApi()
 {
   CrabStaticPort.getClock = CrabGetClock;
   CrabStaticPort.setClock = CrabSetClock;
+  
+  CrabExtern_RegisterApi("SecondEvent", CrabApiSecondEvent);
+
+  CrabExtern_RegisterApi("AlarmClose", CrabApiAlarmClose);
+  CrabExtern_RegisterApi("AlarmWithTime", CrabApiAlarmWithTime);
+  CrabExtern_RegisterApi("AlarmWithWeek", CrabApiAlarmWithWeek);
+  CrabExtern_RegisterApi("AlarmWithDay", CrabApiAlarmWithDay);  
+  CrabExtern_RegisterApi("AlarmWithDate", CrabApiAlarmWithDate);  
 }
 
 /*******************************************************************************
@@ -32,8 +44,11 @@ void CrabRegisterClockApi()
 * Description : .
 *******************************************************************************/
 crabapi CrabGetClock()
-{  
+{
   CrabUint Port = CrabExtern_GetPortAddr();
+  
+  RTC_TimeTypeDef  RTC_TimeStructure;
+  RTC_DateTypeDef  RTC_DateStructure;  
   
   if (Port != 2)  //除了时间型，其它都读日期
   {
@@ -99,6 +114,10 @@ crabapi CrabGetClock()
 crabapi CrabSetClock()
 {
   CrabUint      Port = CrabExtern_GetPortAddr();
+  
+  RTC_TimeTypeDef  RTC_TimeStructure;
+  RTC_DateTypeDef  RTC_DateStructure;   
+  
   CrabUShort    Year;
   CrabByte      Month, Day;
   CrabByte      Hour, Min, Sec;
@@ -112,7 +131,7 @@ crabapi CrabSetClock()
     //       RTC_DateStructure.RTC_Year, 
     //       RTC_DateStructure.RTC_Month, 
     //       RTC_DateStructure.RTC_Date, 
-    //       RTC_DateStructure.RTC_WeekDay);   
+    //       RTC_DateStructure.RTC_WeekDay);
   }
   
   if (Port != 1) //除了日期型，其它都读时间
@@ -126,7 +145,7 @@ crabapi CrabSetClock()
     
     /* Unfreeze the RTC DR Register */
     (void)RTC->DR;
-  }  
+  }
   
   switch (Port)
   {
@@ -136,11 +155,6 @@ crabapi CrabSetClock()
       if (!CrabExtern_ReadFromPortAsDate(Date)) return;
 
       CrabDate_Decode(Date, __ref Year, __ref Month, __ref Day);
-
-      RTC_DateStructure.RTC_Year = Year % 100;
-      RTC_DateStructure.RTC_Month = Month;
-      RTC_DateStructure.RTC_Date = Day;
-
       break;
     }
     case 2:
@@ -150,10 +164,6 @@ crabapi CrabSetClock()
 
       CrabTime_Decode(Time, __ref Hour, __ref Min, __ref Sec, __ref MSec);
 
-      RTC_TimeStructure.RTC_Hours = Hour;
-      RTC_TimeStructure.RTC_Minutes = Min;
-      RTC_TimeStructure.RTC_Seconds = Sec;
-
       break;
     }
     default:
@@ -162,20 +172,17 @@ crabapi CrabSetClock()
       if (!CrabExtern_ReadFromPortAsDatetime(Value)) return;
 
       CrabDate_Decode(Value.Date, __ref Year, __ref Month, __ref Day);
-
-      RTC_DateStructure.RTC_Year = Year % 100;
-      RTC_DateStructure.RTC_Month = Month;
-      RTC_DateStructure.RTC_Date = Day;
       CrabTime_Decode(Value.Time, __ref Hour, __ref Min, __ref Sec, __ref MSec);
-
-      RTC_TimeStructure.RTC_Hours = Hour;
-      RTC_TimeStructure.RTC_Minutes = Min;
-      RTC_TimeStructure.RTC_Seconds = Sec;
     }
-  }  
+  }
   
+  CrabTaskMutexEnter(CRAB_TASK_MUTEX_ALARM);
   if (Port !=2 ) 
   {
+    RTC_DateStructure.RTC_Year = Year % 100;
+    RTC_DateStructure.RTC_Month = Month;
+    RTC_DateStructure.RTC_Date = Day;
+    
     /* Configure the RTC date register */
     if(RTC_SetDate(RTC_Format_BIN, &RTC_DateStructure) == ERROR)
     {
@@ -189,6 +196,10 @@ crabapi CrabSetClock()
 
   if (Port != 1)
   {
+    RTC_TimeStructure.RTC_Hours = Hour;
+    RTC_TimeStructure.RTC_Minutes = Min;
+    RTC_TimeStructure.RTC_Seconds = Sec;
+
     /* Configure the RTC time register */
     if(RTC_SetTime(RTC_Format_BIN, &RTC_TimeStructure) == ERROR)
     {
@@ -199,4 +210,213 @@ crabapi CrabSetClock()
       RTC_WriteBackupRegister(RTC_BKP_DR0, 0x32F2);
     }
   }
+  CrabTaskMutexExit(CRAB_TASK_MUTEX_ALARM);
+}
+
+/*******************************************************************************
+* Function    : CrabApiSecondEvent
+* Caption     : 
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+//extern void SecondEvent(boolean Status) : 'SecondEvent';
+crabapi CrabApiSecondEvent()
+{
+  CrabBool          Status;
+  
+  do
+  {
+    if (!CrabExtern_PopupParamAsBool(Status)) break;
+
+    CrabSetupSecondEvent(Status);
+  } while (0);
+
+}
+
+/*******************************************************************************
+* Function    : CrabApiAlarmClose
+* Caption     : 
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+//extern void Close() : 'AlarmClose';
+crabapi CrabApiAlarmClose()
+{
+  CrabUint    Index = 0;
+  
+  do
+  {
+    if (!CrabExtern_PopupParamAsUint(Index)) break;
+    if ((Index == 0) || (Index > CRAB_ALARM_COUNT)) return;
+    
+    CrabAlarmClose(Index);
+    
+  } while (0);
+  
+}
+
+/*******************************************************************************
+* Function    : CrabApiAlarmWithTime
+* Caption     : 
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+//extern void UpdateWithTime(time Time, boolean EveryDay) : 'AlarmWithTime';
+crabapi CrabApiAlarmWithTime()
+{
+  CrabUint          Index = 0;
+  CrabTime          Time;
+  CrabBool          EveryDay;
+  TCrabAlarmClock   ClockInfo;
+  
+  do
+  {
+    if (!CrabExtern_PopupParamAsUint(Index)) break;
+    if (!CrabExtern_PopupParamAsTime(Time)) break;
+    if (!CrabExtern_PopupParamAsBool(EveryDay)) break;
+    
+    if ((Index == 0) || (Index > CRAB_ALARM_COUNT)) return;
+    
+    ClockInfo.AlarmType = CRAB_ALARM_TIME;
+    ClockInfo.Time = Time;
+    ClockInfo.NextCheck = CRAB_ALARM_SEC_CHECK;
+    
+    if (EveryDay)
+    {
+      ClockInfo.Active = CRAB_ALARM_LOOP;
+    }
+    else
+    {
+      ClockInfo.Active = CRAB_ALARM_ONCE;
+    }
+    
+    CrabAlarmSetup(Index, &ClockInfo);
+  } while (0);
+
+}
+
+/*******************************************************************************
+* Function    : CrabApiAlarmWithWeek
+* Caption     : 
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+//extern void UpdateWithWeek(int Weekday, time Time, boolean EveryWeek) : 'AlarmWithWeek';
+crabapi CrabApiAlarmWithWeek()
+{
+  CrabUint          Index = 0;
+  CrabInt           Weekday;
+  CrabTime          Time;
+  CrabBool          EveryWeek;
+  TCrabAlarmClock   ClockInfo;
+  
+  do
+  {
+    if (!CrabExtern_PopupParamAsUint(Index)) break;
+    if (!CrabExtern_PopupParamAsInt(Weekday)) break;
+    if (!CrabExtern_PopupParamAsTime(Time)) break;
+    if (!CrabExtern_PopupParamAsBool(EveryWeek)) break;
+    
+    if ((Index == 0) || (Index > CRAB_ALARM_COUNT)) return;
+    
+    ClockInfo.AlarmType = CRAB_ALARM_WEEK;
+    ClockInfo.Time = Time;
+    ClockInfo.Date.Day = Weekday;
+    ClockInfo.NextCheck = CRAB_ALARM_SEC_CHECK;
+    
+    if (EveryWeek)
+    {
+      ClockInfo.Active = CRAB_ALARM_LOOP;
+    }
+    else
+    {
+      ClockInfo.Active = CRAB_ALARM_ONCE;
+    }
+    
+    CrabAlarmSetup(Index, &ClockInfo);
+  } while (0);
+
+}
+
+/*******************************************************************************
+* Function    : CrabApiAlarmWithDay
+* Caption     : 
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+//extern void UpdateWithDay(int Day, time Time, boolean EveryMonth) : 'AlarmWithDay';
+crabapi CrabApiAlarmWithDay()
+{
+  CrabUint          Index = 0;
+  CrabInt           Day;
+  CrabTime          Time;
+  CrabBool          EveryMonth;
+  TCrabAlarmClock   ClockInfo;
+  
+  do
+  {
+    if (!CrabExtern_PopupParamAsUint(Index)) break;
+    if (!CrabExtern_PopupParamAsInt(Day)) break;
+    if (!CrabExtern_PopupParamAsTime(Time)) break;
+    if (!CrabExtern_PopupParamAsBool(EveryMonth)) break;
+    
+    if ((Index == 0) || (Index > CRAB_ALARM_COUNT)) return;
+    
+    ClockInfo.AlarmType = CRAB_ALARM_DAY;
+    ClockInfo.Time = Time;
+    ClockInfo.Date.Day = Day;
+    ClockInfo.NextCheck = CRAB_ALARM_SEC_CHECK;
+    
+    if (EveryMonth)
+    {
+      ClockInfo.Active = CRAB_ALARM_LOOP;
+    }
+    else
+    {
+      ClockInfo.Active = CRAB_ALARM_ONCE;
+    }
+    
+    CrabAlarmSetup(Index, &ClockInfo);
+  } while (0);
+
+}
+
+/*******************************************************************************
+* Function    : UpdateWithDate
+* Caption     : 
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+//extern void UpdateWithDate(date Date, boolean EveryYear) : 'AlarmWithDate';
+crabapi CrabApiAlarmWithDate()
+{
+  CrabUint          Index = 0;
+  CrabDate          Date;
+  CrabBool          EveryYear;
+  TCrabAlarmClock   ClockInfo;
+  
+  do
+  {
+    if (!CrabExtern_PopupParamAsUint(Index)) break;
+    if (!CrabExtern_PopupParamAsDate(Date)) break;
+    if (!CrabExtern_PopupParamAsBool(EveryYear)) break;
+    
+    if ((Index == 0) || (Index > CRAB_ALARM_COUNT)) return;
+    
+    ClockInfo.AlarmType = CRAB_ALARM_TIME;
+    ClockInfo.Date.Date = Date;
+    ClockInfo.NextCheck = CRAB_ALARM_SEC_CHECK;
+    
+    if (EveryYear)
+    {
+      ClockInfo.Active = CRAB_ALARM_LOOP;
+    }
+    else
+    {
+      ClockInfo.Active = CRAB_ALARM_ONCE;
+    }
+    
+    CrabAlarmSetup(Index, &ClockInfo);
+  } while (0);
+
 }

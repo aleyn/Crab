@@ -33,21 +33,21 @@ main
 
     if (ADC1 != OldADC1)
     {
-      board.LED2 = LED_RED;
+      board.LED[2] = LED_RED;
       PrintLn("TWIST: " # ADC1); 
       OldADC1 = ADC1;
     }
 
     if (ADC2 != OldADC2)
     {
-      board.LED2 = LED_BLUE;
+      board.LED[2] = LED_BLUE;
       PrintLn("ADC2: " # ADC2); 
       OldADC2 = ADC2;
     }
 
     Delay(50);
 
-    board.LED2 = LED_OFF;
+    board.LED[2] = LED_OFF;
   }
   until error;
 

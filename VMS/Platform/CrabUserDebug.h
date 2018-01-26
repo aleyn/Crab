@@ -11,6 +11,8 @@
 #define __CRAB_USER_DEBUG_
 
 #include "CrabBaseType.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -18,6 +20,7 @@ extern "C" {
 
 //ต๗สิศฮฮ๑
 void CrabUserDebugTask();
+void CrabUserDebug();
 
 #ifdef  __cplusplus
 }

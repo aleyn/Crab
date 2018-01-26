@@ -205,7 +205,7 @@ typedef struct
   GapWord   ResultSize;
   
 } TGap, *PGap;
-
+#pragma pack()
 
 void GapInit(PGap Gap, GapByte *Buffer, GapWord Count);
 void GapReset(PGap Gap);

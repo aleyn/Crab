@@ -60,11 +60,13 @@ uint8_t USB_ReceiveSuccess();
 void USB_ReceiveComplete(uint8_t State);
 void USB_TransmitComplete(uint8_t State, uint16_t Size);
 
-void Log(char* fmt, ...);
-void Logc(char* fmt, ...);
-void Log_Command(uint8_t Status);
-uint8_t Log_Check(char **Buf, uint16_t MaxCount);
-void Log_Add(uint16_t Offset, uint16_t Count);
+#ifdef USB_LOG_ENABLE
+void    USB_Log(char* fmt, ...);
+void    USB_Logc(char* fmt, ...);
+void    USB_LogCommand(uint8_t Status);
+uint8_t USB_LogCheck(char **Buf, uint16_t MaxCount);
+void    USB_LogAdd(uint16_t Offset, uint16_t Count);
+#endif
 
 #endif
 /*****END OF FILE****/

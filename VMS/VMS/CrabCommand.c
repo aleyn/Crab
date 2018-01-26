@@ -12,11 +12,16 @@
 #include "CrabVersionFW.h"
 #include "CrabHardware.h"
 #include "Gap.h"
+#include "usbd_usr.h"
+#include "usbd_desc.h"
+#include "usbd_gap.h"
 
 extern GapByte GapBuffer[GAP_ENCODE_SIZE];
 __cache TGapData GapTx;
 __cache TGapData GapRx1;
 __cache TGapData GapRx2;
+
+CrabByte CrabCmdStatus;
 
 CrabBool Cmd_DeviceDetect(PGapData GapCmd);
 CrabBool Cmd_Setup(PGapData GapCmd);
@@ -43,7 +48,9 @@ void USB_OnDecodeGap()
 *******************************************************************************/
 void USB_OnRunScript(uint8_t State)
 {
+  CrabCmdStatus = CRAB_CMD_STOP;
   CrabChangeAppState(State);  
+  //CrabUpdateLEDStatus();
   CrabTaskResumeFromISR(CRAB_TASK_APPLICATION);
 }
 
@@ -59,17 +66,26 @@ void CrabCommandTask()
   PGapData    GapRx = &GapRx1;
   CrabUint    Status = CrabFalse;
   CrabByte    GapIndex = 1;
+  CrabUint    Timeover = CRAB_CMD_TIMEOVER;
   
   GapInit(&Gap, GapBuffer, GAP_ENCODE_SIZE);
-  CrabCreateStoreStream();  
+  CrabCreateStoreStream();
+  CrabCmdStatus = CRAB_CMD_STOP;
   USB_Enable();
   CrabTaskSuspend(CRAB_TASK_COMMAND);
   
   while (1)
   {
+
     if (USB_ReceiveSuccess()) //检测上位机的命令
     {
-      CrabChangeLEDStatus(CRAB_LED_RED_FLASH);
+      Timeover = CRAB_CMD_TIMEOVER;
+      
+      if (CrabCmdStatus != CRAB_CMD_WORKING)
+      {
+        CrabCmdStatus = CRAB_CMD_WORKING;
+        CrabUpdateLEDStatus();
+      }
       
       if (GapDecodeBuffer(&Gap, GapRx, sizeof(TGapData)) == GAP_Success)
       {
@@ -90,14 +106,25 @@ void CrabCommandTask()
       }
       else
       {
+        CrabCmdStatus = CRAB_CMD_ERROR;
+        CrabUpdateLEDStatus();
         USB_ReceiveComplete(USBGAP_FAILD);
         continue;
       }
     }
     else
     {
-      CrabChangeLEDStatus(CRAB_LED_RED_ON);
-      CrabTaskSuspend(CRAB_TASK_COMMAND);
+      if (Timeover)
+      {
+        Timeover--;
+        CrabDelay(1);
+      }
+      else
+      {
+        CrabCmdStatus = CRAB_CMD_STOP;
+        CrabUpdateLEDStatus();
+        CrabTaskSuspend(CRAB_TASK_COMMAND);
+      }
       continue;
     }
     
@@ -152,10 +179,14 @@ void CrabCommandTask()
     {
       //cmd_log("Command = %2.2x, Respond = %2.2x;", GapCmd->Command, GapTx.Respond);
       USB_TransmitComplete(USBGAP_SUCCESS, Gap.ResultSize);
+      //CrabCmdStatus = CRAB_CMD_SUCCESS;
+      //CrabUpdateLEDStatus();      
     }
     else
     {
       USB_TransmitComplete(USBGAP_FAILD, 0);
+      CrabCmdStatus = CRAB_CMD_ERROR;
+      CrabUpdateLEDStatus();      
     }
   }
 }

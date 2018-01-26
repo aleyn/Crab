@@ -16,6 +16,12 @@
 extern "C" {
 #endif
 
+#define CRAB_CMD_STOP             0
+#define CRAB_CMD_WORKING          1
+#define CRAB_CMD_SUCCESS          2
+#define CRAB_CMD_ERROR            4
+  
+#define CRAB_CMD_TIMEOVER         1000  
 //通讯命令任务
 void CrabCommandTask();
 

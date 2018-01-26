@@ -26,6 +26,8 @@ extern "C" {
 //事件任务
 void CrabEventTask();
 
+//事件压栈
+void CrabEventPush(CrabUint Event);
 #ifdef  __cplusplus
 }
 #endif

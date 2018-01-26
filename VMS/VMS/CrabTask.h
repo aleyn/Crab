@@ -13,6 +13,8 @@
 #include "CrabBaseType.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
+#include "semphr.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -28,6 +30,12 @@ extern "C" {
 #define TASK_HANDLE               static xTaskHandle
 #define TASK_NAME                 char const*
 #define TASK_PRIO(P)              (RTOS_HIGHEST_PRIORITY - P)  
+
+//互斥信号量
+#define CRAB_TASK_MUTEX_COUNT     3
+#define CRAB_TASK_MUTEX_DEFAULT   0
+#define CRAB_TASK_MUTEX_ALARM     1
+#define CRAB_TASK_MUTEX_EVENT     2
   
 //创建任务
 void CrabCreateTask(CrabByte TaskID);
@@ -39,6 +47,17 @@ void CrabTaskSuspendFromISR(CrabByte TaskID);
 //唤醒任务
 void CrabTaskResume(CrabByte TaskID);
 void CrabTaskResumeFromISR(CrabByte TaskID);
+
+//建立互斥信号
+void CrabTaskMutexInit();
+//进入互斥
+CrabBool CrabTaskMutexEnter(CrabByte Index);
+//进入互斥，中断方式
+CrabBool CrabTaskMutexEnterISR(CrabByte Index);
+//离开互斥
+CrabBool CrabTaskMutexExit(CrabByte Index);
+//离开互斥，中断方式
+CrabBool CrabTaskMutexExitISR(CrabByte Index);
 
 #ifdef  __cplusplus
 }

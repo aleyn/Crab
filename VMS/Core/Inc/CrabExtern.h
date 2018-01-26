@@ -41,6 +41,7 @@ extern "C" {
 #define CrabExtern_PopupParamAsDatetime(a)      CrabExtern_PopupParam(&a, CRABTYPE_DATETIME)
 
 #define CrabExtern_PopupParamAsArray(a)         CrabExtern_PopupParam(&a, CRABTYPE_ARRAY)
+#define CrabExtern_PopupParamAsStruct(a)        CrabExtern_PopupParam(&a, CRABTYPE_STRUCT)
 #define CrabExtern_PopupParamAsObject(a)        CrabExtern_PopupParam(&a, CRABTYPE_OBJECT)
 
 
@@ -66,6 +67,7 @@ extern "C" {
 #define CrabExtern_ReturnValueAsDatetime(a)      CrabExtern_ReturnValue(&a, CRABTYPE_DATETIME)
 
 #define CrabExtern_ReturnValueAsArray(a)         CrabExtern_ReturnValue(&a, CRABTYPE_ARRAY)
+#define CrabExtern_ReturnValueAsStruct(a)        CrabExtern_ReturnValue(&a, CRABTYPE_STRUCT)
 #define CrabExtern_ReturnValueAsObject(a)        CrabExtern_ReturnValue(&a, CRABTYPE_OBJECT)
 
 #define CrabExtern_ReadFromPortAsTiny(a)        CrabExtern_ReadFromPort(&a, CRABTYPE_TINY)
@@ -155,6 +157,8 @@ extern "C" {
 #define CrabExtern_WriteToHelperAsTime(a)         CrabExtern_WriteToHelper(&a, CRABTYPE_TIME)
 #define CrabExtern_WriteToHelperAsDatetime(a)     CrabExtern_WriteToHelper(&a, CRABTYPE_DATETIME)
 
+#define CrabExtern_CreateStruct(a, b)            CrabExtern_CreateArray(&a, CRABTYPE_BYTE, b)
+
 #define CrabExtern_CreateArrayAsTiny(a, b)       CrabExtern_CreateArray(&a, CRABTYPE_TINY, b)
 #define CrabExtern_CreateArrayAsShort(a, b)      CrabExtern_CreateArray(&a, CRABTYPE_SHORT, b)
 #define CrabExtern_CreateArrayAsInt(a, b)        CrabExtern_CreateArray(&a, CRABTYPE_INT, b)
@@ -177,6 +181,7 @@ extern "C" {
 #define CrabExtern_CreateArrayAsDatetime(a, b)   CrabExtern_CreateArray(&a, CRABTYPE_DATETIME, b)
 
 #define CrabExtern_CreateArrayAsArray(a, b)      CrabExtern_CreateArray(&a, CRABTYPE_ARRAY, b)
+#define CrabExtern_CreateArrayAsStruct(a, b)     CrabExtern_CreateArray(&a, CRABTYPE_STRUCT, b)
 #define CrabExtern_CreateArrayAsObject(a, b)     CrabExtern_CreateArray(&a, CRABTYPE_OBJECT, b)
 
 //定义API函数调用接口
@@ -203,6 +208,7 @@ typedef struct
   TCrabPrint        Print;
   TCrabDelay        Delay;
 } TCrabStaticApi, *PCrabStaticApi;
+#pragma pack()
 
 extern TCrabStaticPort      CrabStaticPort;
 extern TCrabStaticApi       CrabStaticApi;

@@ -34,6 +34,7 @@ typedef struct
   CrabUint      StrPoolCount;   //全长字符串缓冲池个数
   CrabUint      ArrayDimCount;  //数组维数栈个数
 } TCrabConfig, *PCrabConfig;
+#pragma pack()
 
 //将地址或值转为三字节
 CrabUint    CrabThreeByte(CrabUint Addr);

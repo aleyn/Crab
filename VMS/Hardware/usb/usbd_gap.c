@@ -29,6 +29,7 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE USB_OTG_dev __ALIGN_END ;
 
 GapByte   GapBuffer[GAP_ENCODE_SIZE];
 
+#ifdef USB_LOG_ENABLE
 uint8_t   LogBuffer[USBGAP_LOG_BUFFER_SIZE];
 uint16_t  LogPos[USBGAP_LOG_LIST_COUNT];
 uint16_t  LogLen[USBGAP_LOG_LIST_COUNT];
@@ -36,6 +37,7 @@ uint16_t  LogReadIndex;
 uint16_t  LogWriteIndex;
 uint16_t  LogWritePos;
 uint8_t   LogEnable;
+#endif
 
 uint8_t   USB_Tx_Flag;
 uint16_t  USB_Tx_Count;
@@ -129,11 +131,12 @@ void USB_InitDevice()
   USB_Rx_Count = 0;
   USB_Rx_Flag = USBGAP_DATA_NULL;
   
+#ifdef USB_LOG_ENABLE
   USB_Log_Buffer = (uint8_t*)&LogBuffer;
   UsbGap_Status.LogLiveLen = 0; 
   
-  Log_Command(DISABLE);  
-  
+  USB_LogCommand(DISABLE);  
+#endif
   //DCD_DevDisconnect(&USB_OTG_dev);  
 
   USB_HW_Init();
@@ -202,11 +205,17 @@ uint8_t  usbd_gap_Init (void  *pdev,
              GapBuffer,
              0);
 
+#ifdef USB_LOG_ENABLE
   DCD_EP_Tx (&USB_OTG_dev,
              USB_LOG_IN_EP,
              LogBuffer,
              0);
-  
+#else
+  DCD_EP_Tx (&USB_OTG_dev,
+             USB_LOG_IN_EP,
+             0,
+             0);
+#endif  
   USB_PrepareGap();
   USB_UpdateStatus();
 
@@ -407,12 +416,13 @@ uint8_t  usbd_gap_SOF (void *pdev)
     {
       USB_PrepareGap();
     }
-    
+#ifdef USB_LOG_ENABLE    
     if ((LogEnable) && (USB_Log_Flag == USBGAP_DATA_STANDBY) || (USB_Log_Flag == USBGAP_DATA_SUCCESS))
     {
       USB_ReloadLog();
       USB_UpdateStatus();
     }
+#endif
   }
   
   return USBD_OK;
@@ -489,6 +499,7 @@ void USB_ReloadGap()
 *******************************************************************************/
 void USB_ReloadLog()
 {  
+#ifdef USB_LOG_ENABLE
   uint16_t  USB_Log_Count;
   USB_Log_Count = LogLen[LogReadIndex];
    
@@ -527,6 +538,9 @@ void USB_ReloadLog()
   {
     USB_Log_Flag = USBGAP_DATA_NULL;
   }
+#else
+  USB_Log_Flag = USBGAP_DATA_NULL;  
+#endif
 }
 
 /*******************************************************************************
@@ -667,11 +681,12 @@ void GAP_OUT_Callback (void)
 *******************************************************************************/
 void CMD_IN_Callback(void)
 {
+#ifdef USB_LOG_ENABLE
   if ((LogEnable) && (UsbGap_Status.LogLiveLen == 0) && (USB_Log_Flag != 1))
   {
     USB_ReloadLog();
   }
-
+#endif
   USB_UpdateStatus();
 }
 
@@ -695,7 +710,9 @@ void CMD_OUT_Callback(void)
     }
     case USBGAP_CMD_LOG:
     {
-      Log_Command(UsbGap_Cmd.Param1);
+#ifdef USB_LOG_ENABLE      
+      USB_LogCommand(UsbGap_Cmd.Param1);
+#endif
       USB_UpdateStatus();
             
       break;
@@ -726,6 +743,7 @@ void CMD_OUT_Callback(void)
 *******************************************************************************/
 void LOG_IN_Callback (void)
 {
+#ifdef USB_LOG_ENABLE
   uint16_t USB_Log_Count;
   
   if ((LogEnable) && (USB_Log_Flag == USBGAP_DATA_READY))
@@ -780,6 +798,7 @@ void LOG_IN_Callback (void)
   {
     //DCD_EP_Stall(&USB_OTG_dev, USB_LOG_IN_EP);
   }
+#endif
 }
 
 /*******************************************************************************
@@ -836,19 +855,19 @@ void USB_TransmitComplete(uint8_t State, uint16_t Size)
 
 
 /*******************************************************************************
-* Function    : Log_Command
+* Function    : USB_LogCommand
 * Caption     : .
 *  @Param     : 1.Status - 
 * Description : .
 *******************************************************************************/
-void Log_Command(uint8_t Status)
+#ifdef USB_LOG_ENABLE
+void USB_LogCommand(uint8_t Status)
 {
   LogEnable = Status;
   LogReadIndex = 0;
   LogWriteIndex = 0;
   LogWritePos = 0;
   USB_Log_Flag = 0;
-  //USB_Log_Count = 0;  
 
   memset(&GapBuffer, 0 , GAP_ENCODE_SIZE);
   memset(&LogBuffer, 0 , USBGAP_LOG_BUFFER_SIZE);
@@ -865,15 +884,16 @@ void Log_Command(uint8_t Status)
   }
   
 }
-
+#endif
 
 /*******************************************************************************
-* Function    : Log
+* Function    : USB_Log
 * Caption     : .
 *  @Param     : 1.fmt - 
 * Description : 自动加回车换行
 *******************************************************************************/
-void Log(char* fmt, ...)
+#ifdef USB_LOG_ENABLE
+void USB_Log(char* fmt, ...)
 {
   uint16_t Count;
   
@@ -882,19 +902,20 @@ void Log(char* fmt, ...)
   va_list argPt;
   va_start(argPt, fmt);
           
-  if (!Log_Check(&Buf, 0)) return;
+  if (!USB_LogCheck(&Buf, 0)) return;
   Count = vsnprintf(Buf, 255, fmt, argPt);
   Buf[Count] = '\n';
-  Log_Add(0, Count + 1);
+  USB_LogAdd(0, Count + 1);
 }
-
+#endif
 /*******************************************************************************
-* Function    : Logc
+* Function    : USB_Logc
 * Caption     : .
 *  @Param     : 1.fmt - 
 * Description : 不加回车换行
 *******************************************************************************/
-void Logc(char* fmt, ...)
+#ifdef USB_LOG_ENABLE
+void USB_Logc(char* fmt, ...)
 {
   uint16_t Count;
   
@@ -903,20 +924,21 @@ void Logc(char* fmt, ...)
   va_list argPt;
   va_start(argPt, fmt);
           
-  if (!Log_Check(&Buf, 0)) return;
+  if (!USB_LogCheck(&Buf, 0)) return;
   Count = vsnprintf(Buf, 255, fmt, argPt);
-  Log_Add(0, Count);
+  USB_LogAdd(0, Count);
 }
-
+#endif
 /*******************************************************************************
-* Function    : Log_Check
+* Function    : USB_LogCheck
 * Caption     : .
 *  @Param     : 1.Buf - 
 *  @Param     : 2.MaxCount - 
 * Return      : uint8_t
 * Description : .
 *******************************************************************************/
-uint8_t Log_Check(char **Buf, uint16_t MaxCount)
+#ifdef USB_LOG_ENABLE
+uint8_t USB_LogCheck(char **Buf, uint16_t MaxCount)
 {
   if (!LogEnable) return 0;
   
@@ -935,15 +957,16 @@ uint8_t Log_Check(char **Buf, uint16_t MaxCount)
   
   return 1;
 }
-
+#endif
 /*******************************************************************************
-* Function    : Log_Add
+* Function    : USB_LogAdd
 * Caption     : .
 *  @Param     : 1.Offset - 
 *  @Param     : 2.Count - 
 * Description : .
 *******************************************************************************/
-void Log_Add(uint16_t Offset, uint16_t Count)
+#ifdef USB_LOG_ENABLE
+void USB_LogAdd(uint16_t Offset, uint16_t Count)
 {
   if ((!LogEnable) || (Count == 0)) return;
 
@@ -963,5 +986,5 @@ void Log_Add(uint16_t Offset, uint16_t Count)
     USB_Log_Flag = USBGAP_DATA_STANDBY;
   }
 }
-
+#endif
 /*****END OF FILE****/

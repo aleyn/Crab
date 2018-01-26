@@ -34,6 +34,9 @@ CrabDate  CrabDate_Encode(CrabUShort Year, CrabByte Month, CrabByte Day);
 //将日期格式解译成单独日期
 CrabBool  CrabDate_Decode(CrabDate Date, CrabUShort __var wYear, CrabByte __var bMonth, CrabByte __var bDay);
 
+//取得某一天为星期几
+CrabBool  CrabDate_GetWeek(CrabDate Date, CrabByte __var bWeek);
+
 //日期格式转为整型
 CrabDate  CrabDate_Packed(TCrabDate Date);
 

@@ -32,12 +32,14 @@
 #include "CrabUserApp.h"
 #include "CrabUserDebug.h"
 #include "CrabUtility.h"
+#include "CrabLog.h"
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-#define CrabVMS_log(MSG, ...)  Log(MSG, ##__VA_ARGS__)
+#define CrabVMS_log(FMT, ...)  Log("[CrabVMS] ", FMT, ##__VA_ARGS__)
+#define CrabVMS_Log(FMT, ...)  Log("[CrabVMS] ", FMT, ##__VA_ARGS__)
 
 //∞Ê±æ–≈œ¢
 #define CRAB_DEVICE_ID            101

@@ -3,12 +3,12 @@
   a greeting of "Hello World" to 
   the computer.
   
-  è¿™æ˜¯ä¸€ä¸ªæœ€ç®€å•çš„DEMOç¨‹åºï¼Œå®ƒå‘ä½ å‘é€ä¸€ä¸ª
-  â€œHello Worldâ€ çš„é—®å€™ã€‚
+  ÕâÊÇÒ»¸ö×î¼òµ¥µÄDEMO³ÌĞò£¬ËüÏòÄã·¢ËÍÒ»¸ö
+  ¡°Hello World¡± µÄÎÊºò¡£
 ========================================*/
 import system;
 
 main
 {
-  Print('Hello World');
+  Println('Hello World');
 }

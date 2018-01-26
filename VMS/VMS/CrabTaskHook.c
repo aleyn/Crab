@@ -31,6 +31,7 @@ void vApplicationTickHook( void )
 void vApplicationMallocFailedHook( void )
 {
 	taskDISABLE_INTERRUPTS();
+  CrabVMS_log("Task Malloc Failed");
 	for( ;; );
 }
 
@@ -56,6 +57,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	( void ) pxTask;
 
 	taskDISABLE_INTERRUPTS();
+  CrabVMS_log("Task Stack Overflow");
 	for( ;; );
 }
 // END OF FILE

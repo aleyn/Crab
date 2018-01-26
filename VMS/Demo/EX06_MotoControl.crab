@@ -16,57 +16,57 @@ void Welcome()
   PrintLn('====================================');
 }
 
+int Direct;
+
 //事件：当用户按下F1按键的时候
 event OnKey1 : KEY_PRESS_F1
 {
-  if (Motor1.Active)
+  if (Direct != 0)
   {
-    Board.Led1 = LED_OFF;
+    Board.LED[1] = LED_OFF;
 
     //关闭马达
-    Motor1.Active = false;
+    Motor[1].Speed = 0;
+    Direct = 0;
 
-    PrintLn("Motor1 is Deactive");
+    PrintLn("Motor[1] is Deactive");
   }
   else
   {
-    Board.Led1 = LED_RED;
-
-    //打开马达
-    Motor1.Active = true;
-
-    //马达的驱动频率为10000
-    Motor1.Frequ = 10000;
+    Board.LED[1] = LED_RED;
 
     //马达的速度为80（最大100）
-    Motor1.Speed = 80;
+    Motor[1].Speed = 80;
 
-    PrintLn("Motor1 is Active, Frequ = 10000, Speed = 80");
+    //正向
+    Direct = 1; 
+
+    PrintLn("Motor[1] is Active, Speed = 80");
   }
 }
 
 //事件：当用户按下F2按键的时候
 event OnKey2 : KEY_PRESS_F2
 {
-  if (! Motor1.Active) return;
+  int Speed = Motor[1].Speed;
+  
+  if (Speed == 0) return;
 
-  if (Motor1.Polar == 0)
+  //马达反转
+  Direct = -Direct;
+  Motor[1].Speed = -Speed;
+
+  if (Direct == 1)
   {
-    Board.Led1 = LED_BLUE;
+    Board.LED[1] = LED_RED;
 
-    //马达反转
-    Motor1.Polar = 1;
-
-    PrintLn("Motor1 is CCW, Polar = 1");
+    PrintLn("Motor[1] is CW, Direct = 1");
   }
   else
   {
-    Board.Led1 = LED_RED;
+    Board.LED[1] = LED_BLUE;
 
-    //马达正转
-    Motor1.Polar = 0;
-
-    PrintLn("Motor1 is CW, Polar = 0");
+    PrintLn("Motor[1] is CCW, Direct = -1");
   }
 }
 
@@ -92,6 +92,7 @@ main
   //申请两个局部变量
   uint Twise = 0;      //保存当前旋扭状态
   uint OldTwise = 0;   //保存上一次旋扭状态
+  Direct = 0; //马达正向
   
   //打开事件驱动机制
   OpenEvent();
@@ -102,14 +103,14 @@ main
     Twise = Board.TWIST;
 
     //如果马达已经打开，并且旋钮刻度不为0
-    if ((Motor1.Active) && (Twise>0))
+    if ((Direct != 0) && (Twise>0))
     {
       //如果当前旋钮刻度与上一次的旋钮刻度相差为+-1（加上+-1是因为旋钮有时候有误差和跳动）
       if ((Twise +1 < OldTwise) || (Twise - 1 > OldTwise))
       {
         //将马达的速度与旋钮刻度关联
-        Motor1.Speed = Twise;
-        Print("Motor1 Speed = " # Twise #\n);
+        Motor[1].Speed = Twise * Direct;
+        Print("Motor[1] Speed = " # Twise #\n);
 
         //保存当前刻度
         OldTwise = Twise;

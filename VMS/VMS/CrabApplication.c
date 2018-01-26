@@ -141,6 +141,7 @@ void CrabApplicationTask()
   CrabUint ExecAddr;
   
   CrabApplicationInit();
+  //CrabApplicationReset();
   CrabTaskSuspend(CRAB_TASK_APPLICATION);
 
   do
@@ -149,25 +150,26 @@ void CrabApplicationTask()
     {
       case CRAB_APP_OFF:
       {
-        CrabChangeLEDStatus(CRAB_LED_RED_ON);
+        CrabUpdateLEDStatus();
         break;
       }
       case CRAB_APP_LOADROM:
       {
-        IsContinue = CrabLoadFileToCodeStream();
+        IsContinue = CrabLoadFileToCodeStream() > 0;
         
         if (IsContinue) IsContinue = CrabExecute_LoadStream(&CodeStream, &EEpromStream);        
         if (IsContinue)
         {
-          
+          CrabVMS_log("Load app rom success.");
           CrabAppStatus = CRAB_APP_RESET;
         }
         else
         {
-          CrabVMS_log("[VMS] Load rom faild.");
+          CrabVMS_log("Load app rom faild.");
           CrabAppStatus = CRAB_APP_ERROR;
         }
         
+        CrabUpdateLEDStatus();
         continue;
       }
       case CRAB_APP_RESET:
@@ -186,26 +188,35 @@ void CrabApplicationTask()
           }
           else
           {
-            CrabChangeLEDStatus(CRAB_LED_GREEN_FLASH);
+            CrabVMS_log("App running.");
             CrabAppStatus = CRAB_APP_RUNNING;
           }
           CrabTaskResume(CRAB_TASK_EVENT);
         }
         else
         {
+          CrabString ErrMsg;
+          
           ErrCode = CrabExecute_GetErrorCode();
           ExecAddr = CrabExecute_GetCmdAddr();
-          CrabVMS_log("[VMS] Prepare next line faild (Addr:%8.8X, ErrCode:%d).", ExecAddr, ErrCode);
+          ErrMsg = CrabStringAlloc(255);
+          CrabErrorMessage(ErrCode, ErrMsg);          
+          
+          CrabVMS_Log("Prepare next line faild (Addr:%8.8X, ErrCode:%d).", ExecAddr, ErrCode);
+          CrabVMS_Log(ErrMsg->Data);
+          CrabStringFree(ErrMsg);
           CrabAppStatus = CRAB_APP_ERROR;
         }
 
+        CrabUpdateLEDStatus();
         continue;
       }
       case CRAB_APP_CONTINUE:
       {
+        CrabVMS_log("App continue.");
         CrabTaskResume(CRAB_TASK_EVENT);
-        CrabChangeLEDStatus(CRAB_LED_GREEN_FLASH);
         CrabAppStatus = CRAB_APP_RUNNING;
+        CrabUpdateLEDStatus();
       }
       case CRAB_APP_STEP:
       case CRAB_APP_RUNNING:
@@ -235,17 +246,31 @@ void CrabApplicationTask()
           }
           else
           {
+            CrabString ErrMsg;
+            
             ErrCode = CrabExecute_GetErrorCode();            
             ExecAddr = CrabExecute_GetCmdAddr();
-            CrabVMS_log("[VMS] Prepare next line faild (Addr:%8.8X, ErrCode:%d).", ExecAddr, ErrCode);
+            ErrMsg = CrabStringAlloc(255);
+            CrabErrorMessage(ErrCode, ErrMsg); 
+            
+            CrabVMS_Log("Prepare next line faild (Addr:%8.8X, ErrCode:%d).", ExecAddr, ErrCode);
+            CrabVMS_Log(ErrMsg->Data);
+            CrabStringFree(ErrMsg);
             CrabAppStatus = CRAB_APP_ERROR;
           }
         }
         else
         {
+          CrabString ErrMsg;
+          
           ErrCode = CrabExecute_GetErrorCode();            
           ExecAddr = CrabExecute_GetCmdAddr();
-          CrabVMS_log("[VMS] Runtime error (Addr:%8.8X, ErrCode:%d).", ExecAddr, ErrCode);
+          ErrMsg = CrabStringAlloc(255);
+          CrabErrorMessage(ErrCode, ErrMsg);
+            
+          CrabVMS_Log("Runtime error (Addr:%8.8X, ErrCode:%d).", ExecAddr, ErrCode);
+          CrabVMS_Log(ErrMsg->Data);
+          CrabStringFree(ErrMsg);
           CrabAppStatus = CRAB_APP_ERROR;
         }
 
@@ -253,21 +278,23 @@ void CrabApplicationTask()
       }
       case CRAB_APP_PAUSE:
       {
-        CrabChangeLEDStatus(CRAB_LED_GREEN_ON);
+        CrabVMS_log("App pause.");
+        CrabUpdateLEDStatus();
         CrabTaskSuspend(CRAB_TASK_EVENT);
         break;
       }
       case CRAB_APP_ERROR:
       { 
         CrabApplicationStop();
-        CrabChangeLEDStatus(CRAB_LED_RED_ERROR);
+        CrabUpdateLEDStatus();
         CrabTaskSuspend(CRAB_TASK_EVENT);
         break;
       }
       case CRAB_APP_STOPPING:
       { 
+        CrabVMS_log("App stop.");
         CrabApplicationStop();
-        CrabChangeLEDStatus(CRAB_LED_RED_ON);
+        CrabUpdateLEDStatus();
         CrabTaskSuspend(CRAB_TASK_EVENT);
         CrabAppStatus = CRAB_APP_OFF;
         break;

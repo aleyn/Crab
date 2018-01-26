@@ -66,7 +66,7 @@ crabapi CrabInput (CrabUint Type, CrabAnsi Buffer, PCrabUint Length)
 *******************************************************************************/
 crabapi CrabPrint (CrabAnsi Text, CrabUint Length, CrabBool LineEnd)
 { 
-  CrabChar *Buf;
+  //CrabChar *Buf;
   
   if (Length == 0)
   {
@@ -74,7 +74,7 @@ crabapi CrabPrint (CrabAnsi Text, CrabUint Length, CrabBool LineEnd)
   }
  
   //USBGAP方式
-  if (LineEnd)
+  /*if (LineEnd)
   {
     if (!Log_Check(&Buf, Length + 2)) return;
     CrabMemCopy(Buf, Text, Length);
@@ -91,13 +91,16 @@ crabapi CrabPrint (CrabAnsi Text, CrabUint Length, CrabBool LineEnd)
     if (!Log_Check(&Buf, Length)) return;
     CrabMemCopy(Buf, Text, Length);
     Log_Add(0, Length);
-  }
+  }*/
   
   //串口方式
-  //if (mico_debug_enabled==0) return;
-  //mico_rtos_lock_mutex( &stdio_tx_mutex );
-  //CrabHW_PutString(Text, Length);
-  //mico_rtos_unlock_mutex( &stdio_tx_mutex );
+  CrabHW_PutString(Text, Length);
+  
+  if (LineEnd)
+  {
+    putchar(0x0D);
+    putchar(0x0A);
+  }
 }
 
 /*******************************************************************************

@@ -60,11 +60,10 @@ void      CrabHW_KEY_Write(uint8_t Key);
 
 uint32_t CrabHW_GPIO_GetAddr(uint8_t Index);
 
-uint32_t CrabHW_TIM_GetAddr(uint8_t Index);
-void     CrabHW_TIM_Config(uint8_t TIM, uint32_t Period, uint32_t Prescaler);
-void     CrabHW_TIM_SetPwmWithGPIO(uint8_t TIM, uint8_t OC, uint32_t GIO, uint32_t Value);
+//秒信号中断
+void SECOND_IRQHandler(void);
 
-//马达控制
-void CrabHW_MotorControl(CrabMotorDef *Motor, uint8_t Reset);
+//设置秒信号
+void CrabSetupSecondEvent(uint8_t Status);
 #endif
 /** @} */

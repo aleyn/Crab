@@ -37,6 +37,7 @@ extern "C" {
 #define  CrabErrorNotEnoughTotalMemory  -31 //没有足够的内存
 #define  CrabErrorNotEnoughVarMemory    -32 //没有足够的局部变量内存
 #define  CrabErrorNotEnoughStackMemory  -33 //没有足够的栈内存
+#define  CrabErrorNotEnoughPFString     -34 //没有足够的全长字符串缓冲区
 #define  CrabErrorApiFuncNotFound       -41 //无效的API函数索引
 #define  CrabErrorStackPushFaild        -51 //入栈失败
 #define  CrabErrorStackPopFaild         -52 //出栈失败

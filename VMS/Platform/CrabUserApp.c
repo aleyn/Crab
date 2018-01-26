@@ -32,10 +32,10 @@ void CrabApplicationStop()
   CrabChangeBeep(0, 0);
 
   CrabMotor[0].Active = 0;
-  CrabHW_MotorControl(&CrabMotor[0], 0);
+  //CrabHW_MotorControl(&CrabMotor[0], 0);
 
   CrabMotor[1].Active = 0;
-  CrabHW_MotorControl(&CrabMotor[1], 0);
+  //CrabHW_MotorControl(&CrabMotor[1], 0);
 }
 
 // END OF FILE

@@ -23,7 +23,7 @@ event OnKey1 : KEY_PRESS_F1
    PrintLn('now LED1 is BLUE.');
   }
 
-  Board.Led1 = Led1Flag;
+  Board.Led[1] = Led1Flag;
 }
 
 //当使用按下F2按键的时候，将会进入下面的事件函数
@@ -40,7 +40,7 @@ event OnKey2 : KEY_PRESS_F2
    PrintLn('now LED1 is RED.');
   }
 
-  Board.Led1 = Led1Flag;
+  Board.Led[1] = Led1Flag;
 }
 
 //当使用按下F3按键的时候，将会进入下面的事件函数
@@ -57,7 +57,7 @@ event OnKey3 : KEY_PRESS_F3
    PrintLn('now LED2 is BLUE.');
   }
 
-  Board.Led2 = Led2Flag;
+  Board.Led[2] = Led2Flag;
 }
 
 //当使用按下F4按键的时候，将会进入下面的事件函数
@@ -74,7 +74,7 @@ event OnKey4 : KEY_PRESS_F4
    PrintLn('now LED2 is RED.');
   }
 
-  Board.Led2 = Led2Flag;
+  Board.Led[2] = Led2Flag;
 }
 
 

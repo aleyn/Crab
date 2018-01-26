@@ -1,6 +1,6 @@
 Mark:[%RootKey%]
 [%
-  Output:"$#[PRJ_DIR]\KeyDemo.bin"
+  Output:"$#[PRJ_DIR]\EX03_KeyEvent.bin"
   CodeOutput:""
   BuildDir:"$#[PRJ_DIR]\Build\"
   Log:TRUE

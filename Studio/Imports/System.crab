@@ -11,18 +11,24 @@
 {# Float = (8, 3) #}
 {# MSec = false #}
 
-const VERSION = COMPILER_VERSION;
-const DISABLE = 0;
-const ENABLE  = 1;
-const PI = 3.14159;
+const VERSION           = COMPILER_VERSION;
+const DISABLE           = 0;
+const ENABLE            = 1;
+const PI                = 3.14159;
+const SECOND_EVENT      = 0x80000000;
+const ALARM_EVENT       = 0x81000000;
 
 //System link to system layer API
 interface System
 {
-  property datetime Now   {get; set; index:0; type:'CLOCK';}
-  property date Calendar  {get; set; index:1; type:'CLOCK';}
-  property time Clock     {get; set; index:2; type:'CLOCK';}
+  group Clock
+  {
+    property date Today        {get; set; index:1; type:'CLOCK';}
+    property default time Now  {get; set; index:2; type:'CLOCK';}
+    property datetime Calendar {get; set; index:3; type:'CLOCK';}
 
+    extern void SecondEvent(boolean Status) : 'SecondEvent';
+  }
   //Show system infomation
   {# API = 0x0001 #}
   extern void Infomation();
@@ -46,6 +52,20 @@ interface System
   //Pint text to standard device with line end
   {# API = 0x0006 #}
   extern void PrintLn(string Text);  
+
+  group Alarm
+  {
+    default
+    {
+      array: true;
+    }
+
+    extern void Close() : 'AlarmClose';
+    extern void UpdateWithTime(time Time, boolean EveryDay) : 'AlarmWithTime';
+    extern void UpdateWithWeek(int Weekday, time Time, boolean EveryWeek) : 'AlarmWithWeek';
+    extern void UpdateWithDay(int Day, time Time, boolean EveryMonth) : 'AlarmWithDay';
+    extern void UpdateWithDate(date Date, boolean EveryYear) : 'AlarmWithDate';
+  }
 }
 
 helper int

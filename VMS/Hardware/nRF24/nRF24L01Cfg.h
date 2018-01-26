@@ -11,6 +11,7 @@
 
 #include "stm32f4xx_spi.h"
 
+#define nRF24_ACTIVE    0
 #define nRF24_SCK_PIN   GPIO_PB3
 #define nRF24_MISO_PIN  GPIO_PB4     
 #define nRF24_MOSI_PIN  GPIO_PB5

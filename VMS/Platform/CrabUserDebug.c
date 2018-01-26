@@ -9,8 +9,6 @@
 #include "CrabVMS.h"
 #include "CrabUserDebug.h"
 
-void CrabUserDebug();
-
 /*******************************************************************************
  * Function    : CrabEventTask
  * Caption     : 事件任务
@@ -22,7 +20,7 @@ void CrabUserDebugTask()
   
   while (1)
   {
-    Log("Running in DEBUG mode...");
+    CrabVMS_Log("Running in DEBUG mode...");
     
     CrabUserDebug( );
     
@@ -32,7 +30,10 @@ void CrabUserDebugTask()
 
 void CrabUserDebug()
 {
-
+  uint8_t pcWriteBuffer[500];
+  vTaskList((char *)pcWriteBuffer);
+  printf("TaskName       Status Level Stack Index\r\n");
+  printf("%s\r\n", pcWriteBuffer);
 }
 
 

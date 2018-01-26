@@ -65,7 +65,11 @@ void Device_Init(void)
   ADC_Config();
   EEPROM_Init();
   sFLASH_Init(); 
+  PulseWave_Init();
+  
+#if (nRF24_ACTIVE == 1)
   nRF24_Config();
+#endif
   USB_InitDevice();    
 }
 
@@ -97,10 +101,16 @@ void GPIO_Config(void)
 *******************************************************************************/
 void NVIC_Config(void)
 {
-  //NVIC_InitTypeDef NVIC_InitStructure;
+  NVIC_InitTypeDef NVIC_InitStructure;
 
   // 4位抢占优先级, 0位响应优先级
   NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+  
+  NVIC_InitStructure.NVIC_IRQChannel= SECOND_IRQn;                //更新中断
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority= 0x0F;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority= 0x0F;
+  NVIC_InitStructure.NVIC_IRQChannelCmd= ENABLE;
+  NVIC_Init( &NVIC_InitStructure );
   
   
   /*NVIC_InitStructure.NVIC_IRQChannel = EXTI4_IRQn;

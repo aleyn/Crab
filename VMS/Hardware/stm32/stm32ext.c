@@ -3,22 +3,20 @@
 * Author            : 吴创明(aleyn.wu)
 * Version           : V1.0.0
 * Create Date       : 2009-02-02
-* Last Update       : 2012-08-05
+* Last Update       : 2017-07-18
 * Description       : EXT firmware library.
 ********************************************************************************/
 #include "stm32ext.h"
 
-#if defined (STM32F0)
-  #define GPIO_DECLARE(PortPin)  (GPIO_TypeDef*)((PortPin >> 16) | AHB2PERIPH_BASE)
-#elif defined (STM32F1)
-  #define GPIO_DECLARE(PortPin)  (GPIO_TypeDef*)((PortPin >> 16) | APB2PERIPH_BASE)
-#elif defined (STM32F4)
-  #define GPIO_DECLARE(PortPin)  (GPIO_TypeDef*)((PortPin >> 16) | AHB1PERIPH_BASE)
-#endif
+#define GPIO_PORT_ADDR(PortPin)  (uint32_t)((uint32_t)((PortPin >> 4) - 1) * (uint32_t)0x400 + GPIO_PORT_BASE)
 
-#define GPIO_GETPIN(PortPin)    (PortPin & GPIO_PIN_ALL)
-#define GPIO_GETPORT(PortPin)   (PortPin >> 16)
-#define GPIO_GETEXTI(PortPin)   (PortPin >> 26)
+#if defined (STM32F0)
+  #define GPIO_DECLARE(PortPin)  (GPIO_TypeDef*)(GPIO_PORT_ADDR(PortPin) | AHB2PERIPH_BASE)
+#elif defined (STM32F1)
+  #define GPIO_DECLARE(PortPin)  (GPIO_TypeDef*)(GPIO_PORT_ADDR(PortPin) | APB2PERIPH_BASE)
+#elif defined (STM32F4)
+  #define GPIO_DECLARE(PortPin)  (GPIO_TypeDef*)(GPIO_PORT_ADDR(PortPin) | AHB1PERIPH_BASE)
+#endif
 
 #define GPIO_SETUP_MASK        0x000000FF
 
@@ -35,8 +33,8 @@
 #endif
 /*******************************************************************************
 * Function    : GPIO_InitEx
-* Caption     : .
-*  @Param     : 1.GPIOx - 
+* Caption     : GPIO 初始化
+*  @Param     : 1.GPIOx - GPIO 端口号
 *  @Param     : 2.GPIO_InitStruct - 
 * Description : .
 *******************************************************************************/
@@ -58,10 +56,10 @@ void GPIO_InitEx(GPIO_TypeDef* GPIOx, GPIO_InitExDef* GPIO_InitStruct)
 
 /*******************************************************************************
 * Function    : GPIO_InitPort
-* Caption     : .
-*  @Param     : 1.PortPin - 
-*  @Param     : 2.Mode - 
-*  @Param     : 3.GPIO_AF - 
+* Caption     : GPIO 引脚初始化
+*  @Param     : 1.PortPin - 引脚号
+*  @Param     : 2.Mode -    模式
+*  @Param     : 3.GPIO_AF - 复用功能
 * Description : .
 *******************************************************************************/
 void GPIO_InitPort(GPIO_PORT PortPin, GPIO_MODE Mode, GPIO_AF AlterFunc)
@@ -115,7 +113,7 @@ void GPIO_InitPort(GPIO_PORT PortPin, GPIO_MODE Mode, GPIO_AF AlterFunc)
 
   if (GPIO_InitStructure.GPIO_Mode == GPIO_Mode_AF)
   {
-    GPIO_PinAFConfig(GPIOx, GPIO_PortToSrc(PortPin), AlterFunc);
+    GPIO_PinAFConfig(GPIOx, GPIO_GETPIN_SRC(PortPin), AlterFunc);
   }
 #endif
   
@@ -124,9 +122,9 @@ void GPIO_InitPort(GPIO_PORT PortPin, GPIO_MODE Mode, GPIO_AF AlterFunc)
 
 /*******************************************************************************
 * Function    : GPIO_GetBit
-* Caption     : .
-*  @Param     : 1.PortPin - 
-*  @Param     : 2.GpioMode - 
+* Caption     : 读取IO引脚电平状态
+*  @Param     : 1.PortPin - IO引脚
+*  @Param     : 2.GpioMode - 读取模式
 * Return      : uint8_t
 * Description : .
 *******************************************************************************/
@@ -147,9 +145,9 @@ uint8_t  GPIO_GetBit(GPIO_PORT PortPin, uint8_t InOut)
 
 /*******************************************************************************
 * Function    : GPIO_SetBit
-* Caption     : .
-*  @Param     : 1.PortPin - 
-*  @Param     : 2.BitValue - 
+* Caption     : 设置IO引脚电平状态
+*  @Param     : 1.PortPin - IO引脚
+*  @Param     : 2.BitValue - 新的电平状态
 * Description : .
 *******************************************************************************/
 void GPIO_SetBit(GPIO_PORT PortPin, uint8_t BitValue)
@@ -169,8 +167,8 @@ void GPIO_SetBit(GPIO_PORT PortPin, uint8_t BitValue)
 
 /*******************************************************************************
 * Function    : GPIO_ToggleBit
-* Caption     : .
-*  @Param     : 1.PortPin - 
+* Caption     : 翻转IO引脚电平状态
+*  @Param     : 1.PortPin - IO引脚
 * Description : .
 *******************************************************************************/
 void GPIO_ToggleBit(GPIO_PORT PortPin)
@@ -192,6 +190,36 @@ void GPIO_ToggleBit(GPIO_PORT PortPin)
 #elif defined (STM32F4)
   GPIO_ToggleBits(GPIOx, GPIO_GETPIN(PortPin));
 #endif
+}
+
+/*******************************************************************************
+* Function    : GPIO_SetBit
+* Caption     : 
+*  @Param     : 1.PortPin - 
+*  @Param     : 2.BitValue - 
+* Description : .
+*******************************************************************************/
+int8_t   GPIO_GetState(GPIO_PORT PortPin)
+{
+  int8_t Result = GPIO_STATE_ZERO;
+  
+  GPIO_InitPort(PortPin, GPIO_MODE_INU, 0);
+  
+  if (GPIO_GetInputBit(PortPin) == 0)
+  {
+    Result = GPIO_STATE_LOW;
+  }
+  else
+  {
+    GPIO_InitPort(PortPin, GPIO_MODE_IND, 0);
+
+    if (GPIO_GetInputBit(PortPin) == 1)
+    {
+      Result = GPIO_STATE_HIGH;
+    }
+  }
+  
+  return Result;
 }
 
 /*******************************************************************************
@@ -246,114 +274,22 @@ void GPIO_SetBitMap(GPIO_PORT *PortPinMap, uint32_t BitMapValue, uint32_t Count)
 }
 
 /*******************************************************************************
-* Function    : GPIO_PortToSrc
+* Function    : EXTI_InitLine
 * Caption     : .
 *  @Param     : 1.PortPin - 
 * Description : .
 *******************************************************************************/
-uint32_t GPIO_PortToSrc(GPIO_PORT PortPin)
-{
-  uint16_t           Pin = GPIO_GETPIN(PortPin);
-  uint32_t           Result = 0;
-  
-  switch (Pin)
-  {
-    case GPIO_PIN_0:
-    {
-      Result = GPIO_PinSource0;
-      break;
-    }
-    case GPIO_PIN_1:
-    {
-      Result = GPIO_PinSource1;
-      break;
-    }
-    case GPIO_PIN_2:
-    {
-      Result = GPIO_PinSource2;
-      break;
-    }
-    case GPIO_PIN_3:
-    {
-      Result = GPIO_PinSource3;
-      break;
-    }
-    case GPIO_PIN_4:
-    {
-      Result = GPIO_PinSource4;
-      break;
-    }
-    case GPIO_PIN_5:
-    {
-      Result = GPIO_PinSource5;
-      break;
-    }
-    case GPIO_PIN_6:
-    {
-      Result = GPIO_PinSource6;
-      break;
-    }
-    case GPIO_PIN_7:
-    {
-      Result = GPIO_PinSource7;
-      break;
-    }
-    case GPIO_PIN_8:
-    {
-      Result = GPIO_PinSource8;
-      break;
-    }
-    case GPIO_PIN_9:
-    {
-      Result = GPIO_PinSource9;
-      break;
-    }
-    case GPIO_PIN_10:
-    {
-      Result = GPIO_PinSource10;
-      break;
-    }
-    case GPIO_PIN_11:
-    {
-      Result = GPIO_PinSource11;
-      break;
-    }
-    case GPIO_PIN_12:
-    {
-      Result = GPIO_PinSource12;
-      break;
-    }
-    case GPIO_PIN_13:
-    {
-      Result = GPIO_PinSource13;
-      break;
-    }
-    case GPIO_PIN_14:
-    {
-      Result = GPIO_PinSource14;
-      break;
-    }
-    case GPIO_PIN_15:
-    {
-      Result = GPIO_PinSource15;
-      break;
-    }
-  }
-  
-  return Result;
-}
-
 void EXTI_InitLine(GPIO_PORT PortPin)
 {
 #if defined (STM32F4)  
-  uint16_t  Port = GPIO_GETEXTI(PortPin);
+  uint16_t  Port = GPIO_GETPORT_SRC(PortPin);
 #endif
   uint16_t  Pin = GPIO_GETPIN(PortPin);
   
   EXTI_InitTypeDef   EXTI_InitStructure;
 
 #if defined (STM32F4)  
-  SYSCFG_EXTILineConfig(Port, GPIO_PortToSrc(Pin));
+  SYSCFG_EXTILineConfig(Port, GPIO_GETPIN_SRC(PortPin));
 #endif
   
   EXTI_InitStructure.EXTI_Line = Pin;
@@ -363,6 +299,13 @@ void EXTI_InitLine(GPIO_PORT PortPin)
   EXTI_Init(&EXTI_InitStructure);  
 }
 
+/*******************************************************************************
+* Function    : USART_InitEasy
+* Caption     : USART 简易设置
+*  @Param     : 1.USART - 串口号
+*  @Param     : 2.BaudRate - 串口波率
+* Description : .
+*******************************************************************************/
 void USART_InitEasy(USART_TypeDef *USART, uint32_t BaudRate)
 {
   USART_InitTypeDef USART_InitStructure;
@@ -379,7 +322,14 @@ void USART_InitEasy(USART_TypeDef *USART, uint32_t BaudRate)
   USART_Cmd(USART, ENABLE);
 }
 
-void TurnLed(GPIO_PORT LED_PIN, uint8_t Status)
+/*******************************************************************************
+* Function    : LED_Output
+* Caption     : LED 输出
+*  @Param     : 1.LED_PIN - 引脚编号
+*  @Param     : 2.Status -  新的输出状态
+* Description : .
+*******************************************************************************/
+void LED_Output(GPIO_PORT LED_PIN, uint8_t Status)
 {
   switch (Status)
   {

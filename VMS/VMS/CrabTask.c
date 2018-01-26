@@ -10,23 +10,23 @@
 #include "CrabVMS.h"
 #include "CrabTask.h"
 
-//uint32_t   TickCount = 0;
+xSemaphoreHandle  CrabSemaphoreMutex[CRAB_TASK_MUTEX_COUNT] = {NULL};
 
 #define           CrabSystem_Task_Name            (TASK_NAME)"CrabSystem"
 #define           CrabSystem_Task_Level           TASK_PRIO(3)
-#define           CrabSystem_Task_Size            128
+#define           CrabSystem_Task_Size            384
 #define           CrabSystem_Task_Param           NULL
 TASK_HANDLE 	    CrabSystem_Task_Object;
 
 #define           CrabCommand_Task_Name           (TASK_NAME)"CrabCommand"
 #define           CrabCommand_Task_Level          TASK_PRIO(6)
 #define           CrabCommand_Task_Size           256
-#define           CrabCommand_Task_Param           NULL
+#define           CrabCommand_Task_Param          NULL
 TASK_HANDLE 	    CrabCommand_Task_Object;
 
 #define           CrabDebug_Task_Name             (TASK_NAME)"CrabDebug"
-#define           CrabDebug_Task_Level            TASK_PRIO(7)
-#define           CrabDebug_Task_Size             128
+#define           CrabDebug_Task_Level            TASK_PRIO(6)
+#define           CrabDebug_Task_Size             256
 #define           CrabDebug_Task_Param            NULL
 TASK_HANDLE 	    CrabDebug_Task_Object;
 
@@ -136,13 +136,14 @@ void CrabCreateTask(CrabByte TaskID)
     }
     case CRAB_TASK_DEBUG:
     {
+#ifdef  CRABVMS_DEBUG
       xTaskCreate(CrabDebug_Task,
                   CrabDebug_Task_Name,
                   CrabDebug_Task_Size,
                   CrabDebug_Task_Param,
                   CrabDebug_Task_Level,
                  &CrabDebug_Task_Object);
-      
+#endif
       break;
     }
     case CRAB_TASK_EVENT:
@@ -192,7 +193,9 @@ void CrabTaskSuspend(CrabByte TaskID)
     }
     case CRAB_TASK_DEBUG:
     {
+#ifdef  CRABVMS_DEBUG
       vTaskSuspend(CrabDebug_Task_Object);
+#endif
       break;
     }
     case CRAB_TASK_EVENT:
@@ -230,7 +233,9 @@ void CrabTaskSuspendFromISR(CrabByte TaskID)
     }
     case CRAB_TASK_DEBUG:
     {
+#ifdef  CRABVMS_DEBUG
       vTaskSuspend(CrabDebug_Task_Object);
+#endif
       break;
     }
     case CRAB_TASK_EVENT:
@@ -268,7 +273,9 @@ void CrabTaskResume(CrabByte TaskID)
     }
     case CRAB_TASK_DEBUG:
     {
+#ifdef  CRABVMS_DEBUG
       vTaskResume(CrabDebug_Task_Object);
+#endif
       break;
     }
     case CRAB_TASK_EVENT:
@@ -306,7 +313,9 @@ void CrabTaskResumeFromISR(CrabByte TaskID)
     }
     case CRAB_TASK_DEBUG:
     {
+#ifdef  CRABVMS_DEBUG
       xTaskResumeFromISR(CrabDebug_Task_Object);
+#endif
       break;
     }
     case CRAB_TASK_EVENT:
@@ -322,5 +331,88 @@ void CrabTaskResumeFromISR(CrabByte TaskID)
   }
 }
 
+/*******************************************************************************
+* Function    : CrabTaskMutexInit
+* Caption     : 建立互斥信号
+* Description : 
+*******************************************************************************/
+void CrabTaskMutexInit()
+{
+  CrabByte Index;
+  
+  for (Index = 0; Index < CRAB_TASK_MUTEX_COUNT; Index ++)
+  {
+    CrabSemaphoreMutex[Index] = xSemaphoreCreateMutex();
+  }
+}
 
+/*******************************************************************************
+* Function    : CrabTaskMutexEnter
+* Caption     : 进入互斥
+*  @Param     : 1.Index - 互斥信号索引
+* Description : 
+*******************************************************************************/
+CrabBool CrabTaskMutexEnter(CrabByte Index)
+{
+  if (CrabSemaphoreMutex[Index] == NULL)
+  {
+    CrabSemaphoreMutex[Index] = xSemaphoreCreateMutex();
+  }
+  
+  return xSemaphoreTake(CrabSemaphoreMutex[Index], 0); 
+}
+
+/*******************************************************************************
+* Function    : CrabTaskMutexEnterISR
+* Caption     : 进入互斥中断方式
+*  @Param     : 1.Index - 互斥信号索引
+* Description : 
+*******************************************************************************/
+CrabBool CrabTaskMutexEnterISR(CrabByte Index)
+{
+  if (CrabSemaphoreMutex[Index] == NULL)
+  {
+    CrabSemaphoreMutex[Index] = xSemaphoreCreateMutex();
+  }
+  
+  return xSemaphoreTakeFromISR(CrabSemaphoreMutex[Index], 0); 
+}
+
+/*******************************************************************************
+* Function    : CrabTaskMutexExit
+* Caption     : 离开互斥
+*  @Param     : 1.Index - 互斥信号索引
+* Description : 
+*******************************************************************************/
+CrabBool CrabTaskMutexExit(CrabByte Index)
+{
+  if (CrabSemaphoreMutex[Index] == NULL)
+  {
+    return CrabFalse;
+  }
+  
+  return xSemaphoreGive(CrabSemaphoreMutex[Index]); 
+}
+
+/*******************************************************************************
+* Function    : CrabTaskMutexExitISR
+* Caption     : 离开互斥中断方式
+*  @Param     : 1.Index - 互斥信号索引
+* Description : 
+*******************************************************************************/
+CrabBool CrabTaskMutexExitISR(CrabByte Index)
+{
+  static BaseType_t xHigherPriorityTaskWoken;
+  CrabBool Result;
+
+  if (CrabSemaphoreMutex[Index] == NULL)
+  {
+    return CrabFalse;
+  }
+  
+  Result = xSemaphoreGiveFromISR(CrabSemaphoreMutex[Index], &xHigherPriorityTaskWoken); 
+  portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+  
+  return Result;
+}
 // END OF FILE

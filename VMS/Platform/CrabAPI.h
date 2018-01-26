@@ -28,8 +28,8 @@ void CrabRegisterPortApi();
 //注册板载API函数
 void CrabRegisterFuncApi();
 
-//注册MiCO专属API函数
-void CrabRegisterMicoApi();
+//注册传感器专属API函数
+void CrabRegisterSensorApi();
 
 #ifdef  __cplusplus
 }

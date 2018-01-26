@@ -8,10 +8,10 @@
 ********************************************************************************/
 #include "CrabVMS.h"
 
-crabapi CrabApiTimerConfig    ();
 crabapi CrabApiBeep           ();
 crabapi CrabApiWriteCOM       ();
 
+crabapi CrabApiMyAPIFunc      ();
 /*******************************************************************************
 * Function    : CrabRegisterFuncApi
 * Caption     : ×¢²á°åÔØAPIº¯Êý 
@@ -19,29 +19,10 @@ crabapi CrabApiWriteCOM       ();
 *******************************************************************************/
 void CrabRegisterFuncApi()
 {  
-  CrabExtern_RegisterApi("TimerConfig", CrabApiTimerConfig);
   CrabExtern_RegisterApi("Beep", CrabApiBeep);
   CrabExtern_RegisterApi("WriteCOM", CrabApiWriteCOM);
-}
-
-/*******************************************************************************
-* Function    : CrabApiTimerConfig
-* Caption     : ÅäÖÃÓ²¼þTIMER
-* Return      : crabapi
-* Description : .
-*******************************************************************************/
-crabapi CrabApiTimerConfig ()
-{
-  uint8_t TIM;
-  uint32_t Period;
-  uint32_t Prescaler;
-    
-  if (!CrabExtern_PopupParamAsByte(TIM)) return;
-  if (!CrabExtern_PopupParamAsUint(Period)) return;
-  if (!CrabExtern_PopupParamAsUint(Prescaler)) return;
   
-  
-  CrabHW_TIM_Config(TIM, Period, Prescaler);
+  CrabExtern_RegisterApi("MyAPIFunc", CrabApiMyAPIFunc);    
 }
 
 /*******************************************************************************
@@ -52,13 +33,13 @@ crabapi CrabApiTimerConfig ()
 *******************************************************************************/
 crabapi CrabApiBeep ()
 {
-  uint8_t Width;
-  uint8_t Count;
+  CrabUShort Width;
+  CrabByte Count;
     
-  if (!CrabExtern_PopupParamAsByte(Width)) return;
+  if (!CrabExtern_PopupParamAsUShort(Width)) return;
   if (!CrabExtern_PopupParamAsByte(Count)) return;
 
-  CrabChangeBeep(Width / CRAB_SYSTEM_TICK, Count);
+  CrabChangeBeep(Width, Count);
 }
 
 /*******************************************************************************
@@ -75,4 +56,27 @@ crabapi CrabApiWriteCOM ()
   if (ComStr == null) return;
 
   printf(ComStr->Data);
+}
+
+/*******************************************************************************
+* Function    : CrabApiMyAPIFunc
+* Caption     : APIº¯ÊýÑÝÊ¾
+* Return      : crabapi
+* Description : .
+*******************************************************************************/
+crabapi CrabApiMyAPIFunc ()
+{
+  CrabInt       Result = 0;
+  CrabInt       Param1;
+  CrabInt       Param2;
+
+  do
+  {
+    if (!CrabExtern_PopupParamAsInt(Param1)) break;
+    if (!CrabExtern_PopupParamAsInt(Param2)) break;
+
+    Result = Param1 + Param2;
+  } while (0);
+  
+  CrabExtern_ReturnValueAsInt(Result);
 }

@@ -21,4 +21,5 @@ void CrabRegisterApi()
   CrabRegisterDefaultApi();
   CrabRegisterPortApi();
   CrabRegisterFuncApi();
+  CrabRegisterSensorApi();
 }
